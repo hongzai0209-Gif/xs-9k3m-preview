@@ -98,6 +98,7 @@
   .fld label{display:block;font:400 10px/1 var(--sans);letter-spacing:2px;color:var(--dim);margin-bottom:8px}
   .fld input,.fld select,.fld textarea{width:100%;min-height:48px;padding:13px 14px;border:.5px solid var(--line);background:var(--card);font:400 15px var(--sans);color:var(--ink);border-radius:0;-webkit-appearance:none}
   .fld textarea{min-height:66px;resize:none}
+  .fld.bad input,.fld.bad textarea{border:1.5px solid #B0302A}
   .days{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   .day{min-height:56px;border:.5px solid var(--line);background:var(--card);cursor:pointer;font:400 13px/1.4 var(--sans);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center}
   .day small{font-size:10px;color:var(--dim);margin-top:3px}
@@ -141,7 +142,7 @@
   .lg button{min-width:36px;height:28px;border:0;background:0;color:rgba(255,255,255,.6);font:500 11px/1 var(--sans);cursor:pointer}
   .lg button.on{background:#fff;color:var(--ohd)}
   .pip{background:var(--terra);color:#fff;font:700 14px/1 var(--sans);min-width:28px;height:28px;border-radius:14px;display:flex;align-items:center;justify-content:center;padding:0 8px;flex-shrink:0}
-  .ob{padding:16px}
+  .ob{padding:16px 16px 96px}
   .oc{background:var(--ocard);border:1px solid var(--oline);padding:18px;margin-bottom:12px}
   .ttl{font:600 12px/1 var(--sans);color:var(--odim);margin-bottom:14px}
   .b1{min-height:44px;padding:0 16px;border:0;background:var(--ohd);color:#fff;font:600 14px/1 var(--sans);cursor:pointer}
@@ -259,7 +260,7 @@
   .filt button{min-height:40px;padding:0 4px;border:1px solid var(--oline);background:0;font:600 12px/1.3 var(--sans);color:var(--odim);cursor:pointer;white-space:nowrap}
   .filt button.on{background:var(--ohd);border-color:var(--ohd);color:#fff}
   .filt button em{font-style:normal;font-variant-numeric:tabular-nums;margin-left:4px;opacity:.7;font-size:11px}
-  .onav{display:flex;background:var(--ocard);border-top:1px solid var(--oline);position:sticky;bottom:0;z-index:12}
+  .onav{display:flex;background:var(--ocard);border-top:1px solid var(--oline);position:fixed;left:0;right:0;bottom:0;z-index:45;max-width:430px;margin:0 auto}
   .onav button{flex:1;border:0;background:0;padding:10px 2px 9px;font:500 11px/1.5 var(--sans);color:#9C9A93;cursor:pointer}
   .onav button.on{color:var(--oink)}
   .onav i{display:block;font-style:normal;font-size:17px;margin-bottom:2px}
@@ -540,7 +541,7 @@
       left:max(0px,calc(50% - 580px));width:208px;background:var(--ohd);z-index:60;padding:26px 12px}
     body.desk .view{padding-left:208px}
     body.desk .onav{display:none}
-    body.desk .ob{max-width:820px;margin:0 auto;padding:24px 26px}
+    body.desk .ob{max-width:820px;margin:0 auto;padding:24px 26px 48px}
     body.desk .ohd{padding:22px 30px}
     body.desk .sheet{max-width:430px}
     #side .brand{display:flex;align-items:center;gap:10px;padding:2px 12px 26px}
@@ -638,14 +639,26 @@
     <div><p class="t" id="c2t"></p><p class="s" id="c2s"></p></div></div>
   <div class="lb2">
     <div class="fld"><label id="F1"></label><input id="I-nm" value="Tan Wei Ming"></div>
-    <div class="fld"><label id="F2"></label><input id="I-tel" class="mono" value="9123 4418"></div>
+    <div class="fld"><label id="F2"></label><input id="I-tel" class="mono" inputmode="numeric" value="9123 4418"></div>
     <div class="fld"><label id="F3"></label><select id="I-zn"></select></div>
     <div class="fld"><label id="F4"></label><textarea id="I-ad">Blk 531 Upper Cross Street, #02-40, Singapore 050531</textarea></div>
     <div class="fld"><label id="F5"></label><div class="days" id="c-days"></div></div>
+    <div class="fld"><label id="F6"></label><div class="days" id="c-slots"></div></div>
   </div>
   <div class="lfoot">
     <div><p class="llb" id="c-lb2"></p><p class="ltot"><sup>S$</sup><span id="c-tot2">0</span></p></div>
     <button type="button" class="cta on" id="c-submit"></button>
+  </div>
+</section>
+
+<!-- C4 订单确认 -->
+<section class="view" id="v-c4">
+  <div class="lhd"><button type="button" class="bk" data-go="c2">←</button>
+    <div><p class="t" id="c4t"></p><p class="s" id="c4s"></p></div></div>
+  <div class="lb2" id="c4-body" style="padding:20px 0 8px"></div>
+  <div class="lfoot">
+    <div><p class="llb" id="c4-lb"></p><p class="ltot"><sup>S$</sup><span id="c4-tot">0</span></p></div>
+    <button type="button" class="cta on" id="c4-go"></button>
   </div>
 </section>
 
@@ -889,21 +902,21 @@ var CSROWS=[
 ];
 var ORD=[
  {no:'A9',st:0,shop:0,sku:'f35',q:2,zone:1,who:'Chloe Tan',tel:'9812 3344',
-  ad:'Blk 18 Jalan Membina, #12-45,|Singapore 164018',day:15,batch:'—'},
+  ad:'Blk 18 Jalan Membina, #12-45,|Singapore 164018',day:15,slot:1,batch:'—'},
  {no:'A7',st:1,shop:0,sku:'m35',q:2,zone:0,who:'Tan Wei Ming',tel:'9123 4418',
-  ad:'Blk 531 Upper Cross Street, #02-40,|Singapore 050531',day:15,batch:'B20260908-01'},
+  ad:'Blk 531 Upper Cross Street, #02-40,|Singapore 050531',day:15,slot:0,batch:'B20260908-01'},
  {no:'C3',st:1,shop:1,sku:'m4',q:3,zone:1,who:'Wong Mei Ling',tel:'8862 3401',
-  ad:'10 Anson Road, #23-01 International Plaza,|Singapore 079903',day:16,batch:'B20260910-02'},
+  ad:'10 Anson Road, #23-01 International Plaza,|Singapore 079903',day:16,slot:1,batch:'B20260910-02'},
  {no:'A8',st:1,shop:0,sku:'f3',q:1,zone:2,who:'Lim Chee Keong',tel:'9233 8726',
-  ad:'Blk 123 Bedok North Avenue 3, #05-67,|Singapore 460123',day:15,batch:'B20260911-01'},
+  ad:'Blk 123 Bedok North Avenue 3, #05-67,|Singapore 460123',day:15,slot:0,batch:'B20260911-01'},
  {no:'A6',st:2,shop:0,sku:'f3',q:3,zone:0,who:'Cheah Siew Ling',tel:'8778 4412',
-  ad:'Blk 88 Tanglin Halt Road, #10-22,|Singapore 141088',day:13,batch:'B20260911-01',
+  ad:'Blk 88 Tanglin Halt Road, #10-22,|Singapore 141088',day:13,batch:'B20260911-01',slot:1,
   carr:0,paid:11,drv:'9449 2201',trk:'LLM-8842391'},
  {no:'K2',st:2,shop:2,sku:'m35',q:2,zone:3,who:'Ravi Kumar',tel:'9330 9921',
-  ad:'Blk 470 Yishun Avenue 6, #08-133,|Singapore 760470',day:13,batch:'B20260908-01',
+  ad:'Blk 470 Yishun Avenue 6, #08-133,|Singapore 760470',day:13,batch:'B20260908-01',slot:2,
   carr:1,paid:15,drv:'8664 8830',trk:'GRB-7719044'},
  {no:'A5',st:3,shop:0,sku:'m4',q:2,zone:1,who:'Ng Chee Hong',tel:'9274 5560',
-  ad:'1 Marina Boulevard, #28-00,|Singapore 018989',day:11,batch:'B20260910-02',
+  ad:'1 Marina Boulevard, #28-00,|Singapore 018989',day:11,batch:'B20260910-02',slot:1,
   carr:0,paid:10,drv:'9556 7712',trk:'LLM-8830117'}
 ];
 /* st: 0=待收款 1=待发货 2=配送中 3=已送达 */
@@ -911,10 +924,14 @@ var ORD=[
 /* ═══════════════ 算钱（唯一真相） ═══════════════ */
 function sku(id){for(var i=0;i<SKU.length;i++) if(SKU[i].id===id) return SKU[i]; }
 function px(shop,id){return STORES[shop].price[id];}
+function ordItems(o){return o.items||[{sku:o.sku,q:o.q}];}
+function ordQty(o){var q=0;ordItems(o).forEach(function(i){q+=i.q;});return q;}
+function itemsLabel(o,full){return ordItems(o).map(function(i){return nm(i.sku,full)+' × '+i.q;}).join(L==='zh'?'、':', ');}
 function calc(o){
-  var p=px(o.shop,o.sku), fee=o.q>=FREE?0:ZONE[o.zone].fee;
-  var goods=p.sell*o.q, due=p.settle*o.q+fee;
-  return {goods:goods,fee:fee,amt:goods+fee,due:due,earn:goods+fee-due};
+ var goods=0,settle=0;
+ ordItems(o).forEach(function(i){var p2=px(o.shop,i.sku);goods+=p2.sell*i.q;settle+=p2.settle*i.q;});
+ var q=ordQty(o), fee=q>=FREE?0:ZONE[o.zone].fee;
+ return {goods:goods,fee:fee,amt:goods+fee,due:settle+fee,earn:goods-settle};
 }
 function avail(s){return s.stock-s.hold;}
 function T(){return L==='zh'?Z:E;}
@@ -934,7 +951,7 @@ var Z={
  cart:function(n,f){return n+' 只 · '+(f?'含运费 S$ '+f:'已免运费');},
  next:'填写地址',submit:'提交订单',
  c2t:'收货信息',c2s:'配送范围：新加坡全岛',
- fld:['收件人','联络电话','配送区域','详细地址','送达日期'],
+ fld:['收件人','联络电话','配送区域 · 运费按区','详细地址','送达日期'],
  days:[['9月14','周一'],['9月15','周二'],['9月16','周三']],
  c3t:'订单已提交',c3k:'取单号',c3p:'请至柜台付款',
  rcFee:'运费',rcTot:'合计',rcTo:'收货地址',rcDay:'送达日期',
@@ -1061,6 +1078,10 @@ var Z={
  o9c:'客户资料',cStaff:'负责人',cTel2:'联系电话',cAd2:'地址',
  nsStaff:'负责人',nsTel:'联系电话',nsAd:'门店地址',
  calDet:'配送详情',
+ needFill:'请填写必填资料',
+ slotL:'送达时段',slots:['上午 9–12','下午 12–5','傍晚 5–8'],
+ review:'下一步 · 确认订单',sumT:'订单确认',sumH:'请核对以下资料，确认无误后下单',
+ drM:'公蟹',drF:'母蟹',s1search:'搜单号 / 姓名 / 电话',
  o6t:'安排配送',dTo:'收货信息',dGoods:'出货明细',
  dCopy:'复制收货地址',dCopied:'✓ 已复制到剪贴板',
  dSep:'完成叫车后，填写以下信息',dWho:'配送服务商',dOther:'其他',
@@ -1077,7 +1098,7 @@ var E={
  cart:function(n,f){return n+' pcs · '+(f?'incl. S$ '+f+' delivery':'free delivery');},
  next:'Delivery details',submit:'Place order',
  c2t:'Delivery details',c2s:'Singapore island-wide',
- fld:['Recipient','Phone','Area','Full address','Delivery date'],
+ fld:['Recipient','Phone','Delivery area · fee by zone','Full address','Delivery date'],
  days:[['14 Sep','Mon'],['15 Sep','Tue'],['16 Sep','Wed']],
  c3t:'Order placed',c3k:'Collection no.',c3p:'Pay at the counter',
  rcFee:'Delivery',rcTot:'Total',rcTo:'Deliver to',rcDay:'Arrives',
@@ -1205,6 +1226,10 @@ var E={
  o9c:'Customer details',cStaff:'Contact',cTel2:'Phone',cAd2:'Address',
  nsStaff:'Person in charge',nsTel:'Phone',nsAd:'Store address',
  calDet:'Delivery details',
+ needFill:'Please fill in all required fields',
+ slotL:'Time slot',slots:['9AM – 12PM','12PM – 5PM','5PM – 8PM'],
+ review:'Next · Review order',sumT:'Order Summary',sumH:'Check the details below, then place your order',
+ drM:'Male',drF:'Female',s1search:'Search order no / name / phone',
  o6t:'Arrange delivery',dTo:'Deliver to',dGoods:'Items to pack',
  dCopy:'Copy address (paste into app)',dCopied:'✓ Copied · long-press to paste',
  dSep:'Book in the app, then fill these in',dWho:'Which carrier?',dOther:'Other',
@@ -1215,7 +1240,7 @@ var E={
 };
 
 /* ═══════════════ 状态 ═══════════════ */
-var L='en',view='c1',csex='m',cpick=null,cqty=0,cday=1,czone=0,cfilt=1;
+var L='en',view='c1',csex='m',cpick=null,cqty=0,cday=1,czone=0,cfilt=1,cslot=0,CART={},LASTORD=null,s1q='';
 var shipNo=null,payFee=14,carr=0,copied=false;
 var openS4=null,openS5=null,openStore=null,openPay=null,openIn=false,openWo=false;
 var openStk=null,stkF=0,repId=null,repP=0,openDay=null,openPer=0,sheetOn=null;
@@ -1225,7 +1250,7 @@ var $=function(i){return document.getElementById(i);};
 function toast(m){var t=$('toast');t.textContent=m;t.className='toast on';setTimeout(function(){t.className='toast';},1700);}
 
 function go(v){view=v;
- ['lg','c1','c2','c3','s1','s4','s5','s6','o1','o2','o3','o4','o5','o6','o7','o8','o9'].forEach(function(x){$('v-'+x).classList.toggle('on',x===v);});
+ ['lg','c1','c2','c3','c4','s1','s4','s5','s6','o1','o2','o3','o4','o5','o6','o7','o8','o9'].forEach(function(x){$('v-'+x).classList.toggle('on',x===v);});
  $('app').className='app'+(v[0]==='c'?' lux':'');
  var r=v==='lg'?lgRole:(v[0]==='c'?'c':(v[0]==='s'?'s':'o'));
  ['c','s','o'].forEach(function(x){$('R-'+x).classList.toggle('on',x===r);});
@@ -1238,30 +1263,36 @@ function nav(id,items,idx,map){
 
 /* ═══════════════ 客人 ═══════════════ */
 function csku(){return SKU.filter(function(s){return s.k===csex;});}
+function cartLines(){var r=[];SKU.forEach(function(s2){var q=CART[s2.id]||0;if(q>0)r.push({sku:s2.id,q:q});});return r;}
+function cartQty(){var q=0;cartLines().forEach(function(i){q+=i.q;});return q;}
 function ctot(){
- var list=csku(), s=cpick!==null?list[cpick]:null;
- if(!s) return {s:null,goods:0,fee:0,amt:0};
- var p=px(0,s.id), goods=p.sell*cqty, fee=cqty>=FREE?0:(cqty?ZONE[czone].fee:0);
- return {s:s,goods:goods,fee:fee,amt:goods+fee};
+ var lines=cartLines(),goods=0;
+ lines.forEach(function(i){goods+=px(0,i.sku).sell*i.q;});
+ var q=cartQty(), fee=q>=FREE?0:(q?ZONE[czone].fee:0);
+ return {lines:lines,q:q,goods:goods,fee:fee,amt:goods+fee};
 }
 function submitOrder(){
- var k=ctot(); if(!k.s||!cqty) return;
+ var k=ctot(); if(!k.q) return;
  SEQ++; var no='A'+SEQ;
- var o={no:no,st:0,shop:0,sku:k.s.id,q:cqty,zone:czone,
+ var o={no:no,st:0,shop:0,items:k.lines.map(function(i){return {sku:i.sku,q:i.q};}),zone:czone,
    who:$('I-nm').value||'—',tel:$('I-tel').value||'—',
    ad:($('I-ad').value||'—').replace(/,\s*/g,',|').replace(/\|$/,''),
-   day:[14,15,16][cday],batch:'—',ts:Date.now()};
- k.s.hold+=cqty;              /* 预留库存 */
- ORD.unshift(o);
+   day:[14,15,16][cday],slot:cslot,batch:'—',ts:Date.now()};
+ k.lines.forEach(function(i){sku(i.sku).hold+=i.q;});
+ ORD.unshift(o); LASTORD=o; CART={};
  $('c3n').textContent=no;
  go('c3');
 }
 function confirmPay(no){
  for(var i=0;i<ORD.length;i++){ var o=ORD[i];
   if(o.no!==no) continue;
-  var s=sku(o.sku);
-  if(s.stock-o.q<0){ toast(T().soldout); s.hold=Math.max(0,s.hold-o.q); o.st=-1; draw(); return; }
-  s.hold=Math.max(0,s.hold-o.q); s.stock-=o.q;   /* 预留 -> 正式扣减 */
+  var its=ordItems(o), short=false;
+  its.forEach(function(it){ if(sku(it.sku).stock-it.q<0) short=true; });
+  if(short){
+   its.forEach(function(it){var s2=sku(it.sku);s2.hold=Math.max(0,s2.hold-it.q);});
+   o.st=-1; toast(T().soldout); draw(); return;
+  }
+  its.forEach(function(it){var s2=sku(it.sku);s2.hold=Math.max(0,s2.hold-it.q);s2.stock-=it.q;});
   o.st=1; o.confirmed=true;
   toast(T().done+' · '+no); draw(); return;
  }
@@ -1286,42 +1317,62 @@ function draw(){
   var p=px(0,s.id), av=avail(s), n=nm(s.id,true);
   if(av<=0) return '<div class="sku out"><div><p class="snm">'+n+'</p><p class="swt">'+s.g+' G</p>'+
     '<p class="sst" style="letter-spacing:3px">'+t.sold+'</p></div><div><p class="spr"><sup>S$</sup>'+N(p.sell)+'</p></div></div>';
-  var on=cpick===i, low=av<=5;
-  return '<div class="sku'+(on?' on':'')+'" data-cs="'+i+'"><div><p class="snm">'+n+'</p><p class="swt">'+s.g+' G</p>'+
+  var qn=CART[s.id]||0, low=av<=5;
+  return '<div class="sku'+(qn>0?' on':'')+'"><div><p class="snm">'+n+'</p><p class="swt">'+s.g+' G</p>'+
    '<p class="sst" style="color:'+(low?'var(--low)':'var(--ok)')+'">'+t.left(av)+'</p></div>'+
    '<div><p class="spr"><sup>S$</sup>'+N(p.sell)+'</p>'+
-   (on?'<div class="stp"><button type="button" data-cd="-1">−</button><span>'+cqty+'</span><button type="button" class="p" data-cd="1">＋</button></div>'
-      :'<p class="shint">'+t.tap+'</p>')+'</div></div>';
+   '<div class="stp"><button type="button" data-csub="'+s.id+'">−</button><span>'+qn+'</span><button type="button" class="p" data-cadd="'+s.id+'">＋</button></div>'+
+   '</div></div>';
  }).join('');
  var k=ctot();
  $('c-tot').textContent=N(k.amt); $('c-tot2').textContent=N(k.amt);
- $('c-lb').textContent=cqty?t.cart(cqty,k.fee):t.empty;
- $('c-lb2').textContent=cqty?t.cart(cqty,k.fee):t.empty;
- $('c-tip').style.display=cqty?'block':'none';
- if(cqty)$('c-tip').textContent=cqty>=FREE?t.free:t.need(FREE-cqty);
- $('c-next').disabled=!cqty;$('c-next').className='cta'+(cqty?' on':'');$('c-next').textContent=t.next;
+ $('c-lb').textContent=k.q?t.cart(k.q,k.fee):t.empty;
+ $('c-lb2').textContent=k.q?t.cart(k.q,k.fee):t.empty;
+ $('c-tip').style.display=k.q?'block':'none';
+ if(k.q)$('c-tip').textContent=k.q>=FREE?t.free:t.need(FREE-k.q);
+ $('c-next').disabled=!k.q;$('c-next').className='cta'+(k.q?' on':'');$('c-next').textContent=t.next;
 
  /* ── C2 ── */
  $('c2t').textContent=t.c2t;$('c2s').textContent=t.c2s;
  ['F1','F2','F3','F4','F5'].forEach(function(id,i){$(id).textContent=t.fld[i];});
  $('I-zn').innerHTML=ZONE.map(function(z,i){return '<option value="'+i+'"'+(czone===i?' selected':'')+'>'+z[L]+' — S$ '+z.fee+'</option>';}).join('');
  $('c-days').innerHTML=t.days.map(function(d,i){return '<button type="button" class="day'+(cday===i?' on':'')+'" data-day="'+i+'">'+d[0]+'<small>'+d[1]+'</small></button>';}).join('');
- $('c-submit').textContent=t.submit;
+ $('F6').textContent=t.slotL;
+ $('c-slots').innerHTML=t.slots.map(function(d,i){return '<button type="button" class="day'+(cslot===i?' on':'')+'" data-slot="'+i+'">'+d+'</button>';}).join('');
+ $('c-submit').textContent=t.review;
+
+ /* ── C4 订单确认 ── */
+ if($('c4-body')){
+  var k4=ctot();
+  $('c4t').textContent=t.sumT;$('c4s').textContent=t.sumH;
+  $('c4-lb').textContent=k4.q?t.cart(k4.q,k4.fee):t.empty;
+  $('c4-tot').textContent=N(k4.amt);
+  $('c4-go').textContent=t.submit;
+  $('c4-body').innerHTML='<div class="rc" style="margin:0 20px">'+
+   k4.lines.map(function(i){return '<div class="r"><span>'+nm(i.sku,true)+' × '+i.q+'</span><b>S$ '+N(px(0,i.sku).sell*i.q)+'</b></div>';}).join('')+
+   '<div class="r" style="color:var(--dim)"><span>'+t.rcFee+' · '+ZONE[czone][L]+'</span><span class="mono">'+(k4.fee?'S$ '+N(k4.fee):t.free)+'</span></div>'+
+   '<div class="dv"></div><div class="r"><span>'+t.rcTot+'</span><b style="font-size:18px">S$ '+N(k4.amt)+'</b></div>'+
+   '<div class="dv"></div><div class="ad"><span class="k">'+t.rcTo+'</span>'+($('I-nm').value||'')+' · <span class="mono">'+($('I-tel').value||'')+'</span><br>'+($('I-ad').value||'')+
+   '<span class="k">'+t.rcDay+'</span>'+t.days[cday][0]+' · '+t.slots[cslot]+'</div></div>';
+ }
 
  /* ── C3 ── */
  $('c3t').textContent=t.c3t;$('c3k').textContent=t.c3k;
- $('c3p').innerHTML=t.c3p+' <b>S$ '+N(k.amt)+'</b>';
- if(k.s) $('c3rc').innerHTML=
-   '<div class="r"><span>'+nm(k.s.id,true)+' × '+cqty+'</span><b>S$ '+k.goods+'</b></div>'+
-   '<div class="r" style="color:var(--dim)"><span>'+t.rcFee+' · '+ZONE[czone][L]+'</span><span class="mono">'+(k.fee?'S$ '+k.fee:t.free)+'</span></div>'+
-   '<div class="dv"></div><div class="r"><span>'+t.rcTot+'</span><b style="font-size:18px">S$ '+N(k.amt)+'</b></div>'+
-   '<div class="dv"></div><div class="ad"><span class="k">'+t.rcTo+'</span>'+($('I-nm').value||'')+' · <span class="mono">'+($('I-tel').value||'')+'</span><br>'+($('I-ad').value||'')+
-   '<span class="k">'+t.rcDay+'</span>'+t.days[cday][0]+'</div>';
+ var lo=LASTORD;
+ if(lo){
+  var c3c=calc(lo);
+  $('c3p').innerHTML=t.c3p+' <b>S$ '+N(c3c.amt)+'</b>';
+  $('c3rc').innerHTML=
+   ordItems(lo).map(function(i){return '<div class="r"><span>'+nm(i.sku,true)+' × '+i.q+'</span><b>S$ '+N(px(0,i.sku).sell*i.q)+'</b></div>';}).join('')+
+   '<div class="r" style="color:var(--dim)"><span>'+t.rcFee+' · '+ZONE[lo.zone][L]+'</span><span class="mono">'+(c3c.fee?'S$ '+N(c3c.fee):t.free)+'</span></div>'+
+   '<div class="dv"></div><div class="r"><span>'+t.rcTot+'</span><b style="font-size:18px">S$ '+N(c3c.amt)+'</b></div>'+
+   '<div class="dv"></div><div class="ad"><span class="k">'+t.rcTo+'</span>'+lo.who+' · <span class="mono">'+lo.tel+'</span><br>'+lo.ad.split('|').join('<br>')+
+   '<span class="k">'+t.rcDay+'</span>'+(L==='zh'?('9月'+lo.day+'日'):(lo.day+' Sep'))+' · '+t.slots[lo.slot||0]+'</div>';
+ }
  $('c3w').innerHTML=t.c3w;$('c3go').textContent=t.c3go;
 
  /* ── S1 店家 · 收款 ── */
  var pend=ORD.filter(function(o){return o.st===0&&o.shop===0;});
- var conf=ORD.filter(function(o){return o.st>=1&&o.shop===0;});
  $('s1t').textContent=t.s1t; $('s1n').textContent=pend.length;
  var h='';
  if(!pend.length) h+='<div class="empty">'+t.s1e+'</div>';
@@ -1329,37 +1380,17 @@ function draw(){
   var c=calc(o);
   h+='<div class="ord"><div class="obd s-pend"><span>'+t.stT[0]+'</span><i>'+o.no+'</i></div><div class="oin">'+
    '<div class="or1"><span class="ono">'+o.no+'</span><span class="oam">S$ '+N(c.amt)+'</span></div>'+
-   '<p class="oit">'+t.detail(nm(o.sku,true),o.q)+(c.fee?'　+ S$ '+c.fee:'')+'</p>'+
+   '<p class="oit">'+itemsLabel(o,true)+(c.fee?'　+ S$ '+N(c.fee):'')+'</p>'+
    '<p class="owh">'+o.who+' · '+o.tel+'</p>'+
    '<button type="button" class="bg" style="margin-top:16px" data-pay="'+o.no+'">'+t.confirm+'</button>'+
    '<p style="text-align:center;font:400 12px var(--sans);color:var(--odim);margin-top:10px">'+t.exp+'</p>'+
    '</div></div>';
  });
- if(conf.length){
-  h+='<p class="ttl" style="margin:20px 0 10px">'+t.todayT+' · '+conf.length+'</p>';
-  conf.forEach(function(o){
-   var c=calc(o), op=openS5===o.no, s=sku(o.sku);
-   var stc=['s-pend','s-paid','s-ship','s-done'][o.st];
-   var dd=(L==='zh'?('9月'+o.day+'日'):(o.day+' Sep'));
-   h+='<div class="fold gr'+(op?' open':'')+'"><div class="fhd" data-f5="'+o.no+'">'+
-    '<div><p class="a">✓ '+o.no+' · '+o.who+'</p><p class="b">'+nm(o.sku)+' × '+o.q+' · '+t.stT[o.st]+'</p></div>'+
-    '<div style="display:flex;align-items:center;gap:10px"><div class="r"><p class="v" style="color:var(--green)">'+M(N(c.earn))+'</p><p class="k">'+t.paidTo[2]+'</p></div><span class="chev">›</span></div></div>'+
-    '<div class="fbd">'+
-     '<span class="chip '+stc+'">'+t.stT[o.st]+'</span>'+
-     '<div class="cust">'+
-      '<div class="r"><span class="k">'+t.cWho+'</span><span class="v">'+o.who+'</span></div>'+
-      '<div class="r"><span class="k">'+t.cTel+'</span><a class="v tel" href="tel:'+o.tel.replace(/[^0-9+]/g,'')+'">'+o.tel+'</a></div>'+
-      '<div class="r"><span class="k">'+t.cItem+'</span><span class="v">'+nm(o.sku,true)+' · '+s.g+'g × '+o.q+'</span></div>'+
-      '<div class="ad"><p class="k">'+t.cAd+'</p><p class="v">'+o.ad.split('|').join('<br>')+'</p></div>'+
-      '<div class="r"><span class="k">'+t.cDay+'</span><span class="v">'+dd+'</span></div>'+
-     '</div>'+
-     '<div class="rows">'+
-      '<div class="rw"><span>'+t.paidTo[0]+'</span><em>'+M(N(c.amt))+'</em></div>'+
-      '<div class="rw"><span>'+t.paidTo[1]+'</span><em>'+M(N(c.due))+'</em></div>'+
-      '<div class="rw" style="background:var(--greenbg)"><span style="color:var(--green);font-weight:600">'+t.paidTo[2]+'</span><em style="color:var(--green)">'+M(N(c.earn))+'</em></div>'+
-     '</div>'+
-    '</div></div>';
-  });
+ var confAll=ORD.filter(function(o){return o.st>=1&&o.shop===0;});
+ if(confAll.length){
+  h+='<p class="ttl" style="margin:20px 0 8px">'+t.todayT+' · '+confAll.length+'</p>'+
+   '<div class="fi" style="margin:0 0 10px"><input id="s1-q" placeholder="'+t.s1search+'" value="'+s1q+'" autocomplete="off" style="min-height:46px;font-size:14px;font-weight:400"></div>'+
+   '<div id="s1-list">'+s1ListHtml(t)+'</div>';
  }
  $('s1-body').innerHTML=h;
 
@@ -1384,7 +1415,7 @@ function draw(){
  /* ── S5 结算 ── */
  var td=ORD.filter(function(o){return o.shop===0&&o.st>=1;});
  var tTake=0,tDue=0,tQ=0;
- td.forEach(function(o){var c=calc(o);tTake+=c.amt;tDue+=c.due;tQ+=o.q;});
+ td.forEach(function(o){var c=calc(o);tTake+=c.amt;tDue+=c.due;tQ+=ordQty(o);});
  var hT=0,hD=0,hO=0;
  DH.forEach(function(x){hT+=x.take;hD+=x.take-x.prof;hO+=x.o;});
  var take=tTake+hT, due=tDue+hD, prof=take-due;
@@ -1402,7 +1433,7 @@ function draw(){
   '<div style="display:flex;align-items:center"><div class="rr"><p class="v">+ '+M(N(tTake-tDue))+'</p><p class="k">'+t.dProf+'</p></div>'+
   '<span class="chev">›</span></div></div><div class="bd">'+
   (td.length?td.map(function(o){var c=calc(o);
-    return '<div class="li"><div><p class="no">'+o.no+'</p><p class="wh">'+o.who+' · '+nm(o.sku)+' × '+o.q+'</p></div>'+
+    return '<div class="li"><div><p class="no">'+o.no+'</p><p class="wh">'+o.who+' · '+itemsLabel(o,false)+'</p></div>'+
      '<div><p class="am">'+M(N(c.amt))+'</p><p class="pf">+ S$ '+N(c.earn)+'</p></div></div>';}).join('')
    :'<div class="empty" style="padding:26px">'+t.dNone+'</div>')+
   '</div></div>';
@@ -1424,9 +1455,8 @@ function draw(){
  var live=ORD.filter(function(o){return o.st>=1;});
  var settle=HIST.settle, feeIn=HIST.feeIn, feeOut=HIST.feeOut, sold=HIST.sold, cost=HIST.cost;
  live.forEach(function(o){ if(!o.ts) return; var c=calc(o);
-   settle += c.due - c.fee;               /* 结算收入 = 纯货款（运费另计，否则重复算） */
-   sold   += o.q;
-   cost   += sku(o.sku).cost * o.q;
+   settle += c.due - c.fee;
+   ordItems(o).forEach(function(it){ sold += it.q; cost += sku(it.sku).cost * it.q; });
    feeIn  += c.fee;                       /* 向客人收的运费 */
    if(o.paid != null) feeOut += o.paid;   /* 实付给 Lalamove/Grab —— 发货时输入的那个数字 */
  });
@@ -1436,7 +1466,7 @@ function draw(){
  var totStock=0,totVal=0;
  SKU.forEach(function(s){totStock+=avail(s);totVal+=avail(s)*s.cost;});
  var outAll=0;
- STORES.forEach(function(st){outAll+=storeDue(st.id)-st.paid;});
+ STORES.forEach(function(st){outAll+=Math.max(0,storeDue(st.id)-st.paid);});
  var mx=settle;
  $('o1t').textContent=t.o1t;$('o1s').textContent=t.o1s;
  var pls=[[t.pl[0],settle,100,'in'],[t.pl[1],cost,Math.round(cost/mx*100),'out'],
@@ -1492,17 +1522,18 @@ function draw(){
    var btn=o.st===0?'<button type="button" class="b2" disabled style="opacity:.5">'+t.stAct[0]+'</button>'
      :(o.st===1?'<button type="button" class="b1" data-ship="'+o.no+'">'+t.stAct[1]+'</button>'
      :(o.st===2?'<button type="button" class="b1" data-deliv="'+o.no+'">'+t.stAct[2]+'</button>'
-     :'<button type="button" class="b2">'+t.stAct[3]+'</button>'));
+     :'<button type="button" class="b2" data-vieword="'+o.no+'">'+t.stAct[3]+'</button>'));
    return '<div class="ord"><div class="obd '+st+'"><span>'+t.stT[o.st]+'</span><i>'+o.no+'</i></div><div class="oin">'+
     '<div class="or1"><div><span class="ono">'+o.no+'</span><span class="osh">'+shop+'</span></div><span class="oam">S$ '+N(c.amt)+'</span></div>'+
-    '<p class="oit">'+nm(o.sku)+' · '+sku(o.sku).g+'g × '+o.q+'</p>'+
-    '<p class="owh">'+o.who+' · '+o.tel+'<br>'+t.oTo(o.day,ZONE[o.zone][L])+'</p>'+fee+
+    '<p class="oit">'+itemsLabel(o,false)+'</p>'+
+    '<p class="owh">'+o.who+' · '+o.tel+'<br>'+t.oTo(o.day,ZONE[o.zone][L])+(o.slot!=null?' · '+t.slots[o.slot]:'')+'</p>'+fee+
+    ((o.st>=2&&o.drv)?'<div class="fee" style="margin-top:8px"><span>'+CARR[o.carr||0]+' · <a href="tel:'+o.drv.replace(/\s/g,'')+'" style="color:var(--terra);text-decoration:none">'+o.drv+'</a></span><em style="font-family:var(--mono);font-size:12px;font-weight:500">'+o.trk+'</em></div>':'')+
     '<div class="oln">'+btn+'</div></div></div>';
  }).join(''):'<div class="empty">'+t.o3e+'</div>');
 
  /* ── O4 库存 ── */
  $('o4t').textContent=t.o4t;$('o4s').textContent=t.o4s(totStock,N(totVal));
- var vis=SKU.filter(function(s){return s.stock>0||s.hold>0;});
+ var vis=SKU.slice();
  if(stkF===1) vis=vis.filter(function(s){return avail(s)<=50;});
  if(stkF===2) vis=vis.filter(function(s){return oldest(s.id)>=5;});
  var oh='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'+
@@ -1590,14 +1621,14 @@ function draw(){
      var c=calc(o), sc=['s-pend','s-paid','s-ship','s-done'][o.st];
      return '<div class="r"><div><p class="no">'+o.no+'</p><p class="who">'+o.who+' · '+o.tel+'</p>'+
       '<span class="st '+sc+'">'+t.stT[o.st]+'</span></div>'+
-      '<div><p class="am">'+M(N(c.amt))+'</p><p class="who" style="text-align:right">'+nm(o.sku)+' × '+o.q+'</p></div></div>';
+      '<div><p class="am">'+M(N(c.amt))+'</p><p class="who" style="text-align:right">'+itemsLabel(o,false)+'</p></div></div>';
     }).join('')+'</div>':'<div class="empty">'+t.rNone+'</div>');
  }
 
  /* ── O2 应收账款 ── */
  var dueAll=0,paidAll=0;
  STORES.forEach(function(st){dueAll+=storeDue(st.id);paidAll+=st.paid;});
- var outAll2=dueAll-paidAll;
+ var outAll2=Math.max(0,dueAll-paidAll);
  /* 账龄：按逾期天数分桶 */
  var buck=[0,0,0,0];
  STORES.forEach(function(st){
@@ -1629,7 +1660,7 @@ function draw(){
     '<div><p class="n">'+t.stmtN(pe.n)+'</p><p class="s">'+pe[L]+' · '+M(N(dueAll))+'</p></div>'+
     '<div style="display:flex;align-items:center;gap:10px"><span class="tag no">'+t.arOpen+' S$ '+N(outAll2)+'</span><span class="chev">›</span></div></div>'+
     '<div class="bd">'+STORES.map(function(st){
-      var d2=storeDue(st.id), lf=d2-st.paid;
+      var d2=storeDue(st.id), lf=Math.max(0,d2-st.paid);
       return '<div class="sr"><div class="t"><div><p class="nm">'+st[L]+'</p>'+
        '<p class="fig">'+N(st.paid)+' / '+N(d2)+'</p>'+
        (st.late&&lf>0?'<p class="lt" style="text-align:left">'+t.mLate(st.late)+'</p>':'')+'</div>'+
@@ -1665,7 +1696,7 @@ function draw(){
      '<p style="font:400 15px/1.75 var(--sans);margin-top:8px">'+o.ad.split('|').join('<br>')+'</p>'+
      '<button type="button" class="b2 full'+(copied?' cp':'')+'" id="cpy" style="margin-top:14px'+(copied?';background:var(--greenbg);border-color:var(--greenln);color:var(--green)':'')+'">'+(copied?t.dCopied:t.dCopy)+'</button></div>'+
     '<div class="oc"><p class="ttl">'+t.dGoods+'</p>'+
-     '<p style="font:500 16px/1.5 var(--sans)">'+nm(o.sku,true)+' · '+sku(o.sku).g+'g × '+o.q+'</p></div>'+
+     '<p style="font:500 16px/1.6 var(--sans)">'+itemsLabel(o,true)+'</p></div>'+
     '<p style="text-align:center;font:500 12px var(--sans);color:var(--odim);margin:20px 0 14px">───  '+t.dSep+'  ───</p>'+
     '<div class="fi"><label>'+t.dWho+'</label><div class="carr">'+CARR.map(function(x,i){
       return '<button type="button" data-cr="'+i+'" class="'+(carr===i?'on':'')+'">'+(i===2?t.dOther:x)+'</button>';}).join('')+'</div></div>'+
@@ -1737,7 +1768,7 @@ function calCard(t){
   map[k].q+=it.q;if(it.pend)map[k].pd++;map[k].list.push(it);}
  B2B.forEach(function(o){if(o.st>=2)return;var q=0;o.items.forEach(function(i){q+=i.q;});
   add(fmtD(o.dd),{who:STORES[o.shop][L],q:q,pend:o.st===0,tp:'B2B',ref:'b:'+o.no});});
- ORD.forEach(function(o){if(o.st===1)add(o.day+'/9',{who:o.who,q:o.q,pend:false,tp:(L==='zh'?'零售':'Retail'),ref:'r:'+o.no});});
+ ORD.forEach(function(o){if(o.st===1)add(o.day+'/9',{who:o.who,q:ordQty(o),pend:false,tp:(L==='zh'?'零售':'Retail'),ref:'r:'+o.no});});
  if(CS_IMPORTED)CSROWS.forEach(function(r){add(r.dd,{who:r.who,q:r.q,pend:false,tp:'Cold Storage',ref:'c:'+r.id});});
  var MM={9:{off:1,days:30,zh:'2026 年 9 月',en:'September 2026'},
          10:{off:3,days:31,zh:'2026 年 10 月',en:'October 2026'},
@@ -1803,8 +1834,8 @@ function myStockCard(t){
   MYLEDGER.slice().reverse().map(function(r){
    var bits=[];
    if(r.in)bits.push(t.ledIn+' '+r.in);
-   if(r.sold)bits.push(t.ledSold+' '+r.sold);
-   if(r.dead)bits.push('<span style="color:var(--red)">'+t.ledDead+' '+r.dead+'</span>');
+   if(r.sold)bits.push(t.ledSold+' '+(r.sm!=null?((L==='zh'?'公':'M')+r.sm+' '+(L==='zh'?'母':'F')+r.sf):r.sold));
+   if(r.dead)bits.push('<span style="color:var(--red)">'+t.ledDead+' '+(r.dm!=null?((L==='zh'?'公':'M')+r.dm+' '+(L==='zh'?'母':'F')+r.df):r.dead)+'</span>');
    return '<div style="display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--oline2);font:400 13px var(--sans)">'+
     '<span style="color:var(--odim)">'+r.d+'</span><span>'+(bits.join(' · ')||'—')+'</span>'+
     '<span style="font:600 14px var(--sans);font-variant-numeric:tabular-nums">'+t.ledBal+' '+r.bal+'</span></div>';
@@ -1847,6 +1878,39 @@ function csBlock(t){
   });
  }
  return h;
+}
+function s1ListHtml(t){
+ var q=(s1q||'').toLowerCase();
+ var conf=ORD.filter(function(o){
+  if(o.st<1||o.shop!==0) return false;
+  if(!q) return true;
+  return o.no.toLowerCase().indexOf(q)>=0 || o.who.toLowerCase().indexOf(q)>=0 || o.tel.indexOf(q)>=0;
+ });
+ if(!conf.length) return '<div class="empty" style="padding:26px">'+(L==='zh'?'找不到符合的订单':'No matching orders')+'</div>';
+ return conf.map(function(o){
+  var c=calc(o), op=openS5===o.no;
+  var stc=['s-pend','s-paid','s-ship','s-done'][o.st];
+  var dd=(L==='zh'?('9月'+o.day+'日'):(o.day+' Sep'));
+  return '<div class="fold gr'+(op?' open':'')+'"><div class="fhd" data-f5="'+o.no+'">'+
+   '<div><p class="a">✓ '+o.no+' · '+o.who+'</p><p class="b">'+itemsLabel(o,false)+' · '+t.stT[o.st]+'</p></div>'+
+   '<div style="display:flex;align-items:center;gap:10px"><div class="r"><p class="v">'+M(N(c.amt))+'</p>'+
+   '<p class="k" style="color:var(--green);font-weight:600">'+t.paidTo[2]+' + S$ '+N(c.earn)+'</p></div><span class="chev">›</span></div></div>'+
+   '<div class="fbd">'+
+    '<span class="chip '+stc+'">'+t.stT[o.st]+'</span>'+
+    '<div class="cust">'+
+     '<div class="r"><span class="k">'+t.cWho+'</span><span class="v">'+o.who+'</span></div>'+
+     '<div class="r"><span class="k">'+t.cTel+'</span><a class="v tel" href="tel:'+o.tel.replace(/[^0-9+]/g,'')+'">'+o.tel+'</a></div>'+
+     '<div class="r"><span class="k">'+t.cItem+'</span><span class="v">'+itemsLabel(o,true)+'</span></div>'+
+     '<div class="ad"><p class="k">'+t.cAd+'</p><p class="v">'+o.ad.split('|').join('<br>')+'</p></div>'+
+     '<div class="r"><span class="k">'+t.cDay+'</span><span class="v">'+dd+(o.slot!=null?' · '+t.slots[o.slot]:'')+'</span></div>'+
+    '</div>'+
+    '<div class="rows">'+
+     '<div class="rw"><span>'+t.paidTo[0]+'</span><em>'+M(N(c.amt))+'</em></div>'+
+     '<div class="rw"><span>'+t.paidTo[1]+'</span><em>'+M(N(c.due))+'</em></div>'+
+     '<div class="rw" style="background:var(--greenbg)"><span style="color:var(--green);font-weight:600">'+t.paidTo[2]+'</span><em style="color:var(--green)">'+M(N(c.earn))+'</em></div>'+
+    '</div>'+
+   '</div></div>';
+ }).join('');
 }
 function poCard(o,hq){
  var t=T(), stName=STORES[o.shop][L];
@@ -1940,8 +2004,8 @@ function drawB2B(){
     lg9.slice().reverse().map(function(r){
      var bits=[];
      if(r.in)bits.push(t.ledIn+' '+r.in);
-     if(r.sold)bits.push(t.ledSold+' '+r.sold);
-     if(r.dead)bits.push('<span style="color:var(--red)">'+t.ledDead+' '+r.dead+'</span>');
+     if(r.sold)bits.push(t.ledSold+' '+(r.sm!=null?((L==='zh'?'公':'M')+r.sm+' '+(L==='zh'?'母':'F')+r.sf):r.sold));
+     if(r.dead)bits.push('<span style="color:var(--red)">'+t.ledDead+' '+(r.dm!=null?((L==='zh'?'公':'M')+r.dm+' '+(L==='zh'?'母':'F')+r.df):r.dead)+'</span>');
      return '<div style="display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--oline2);font:400 13px var(--sans)">'+
       '<span style="color:var(--odim)">'+r.d+'</span><span>'+(bits.join(' · ')||'—')+'</span>'+
       '<span style="font:600 14px var(--sans);font-variant-numeric:tabular-nums">'+t.ledBal+' '+r.bal+'</span></div>';
@@ -2060,11 +2124,11 @@ function sheetB(kind,no){
    if(!orr)return;
    var cc=calc(orr);
    sh.innerHTML='<div class="grab"></div><h3>'+orr.who+'</h3>'+
-    '<p class="hint2">'+t.stT[orr.st]+' · '+orr.no+' · 🚚 '+orr.day+'/9</p>'+
+    '<p class="hint2">'+t.stT[orr.st]+' · '+orr.no+' · 🚚 '+orr.day+'/9'+(orr.slot!=null?' · '+t.slots[orr.slot]:'')+'</p>'+
     '<div class="rows" style="margin-bottom:14px">'+
      '<div class="rw"><span>'+t.cTel2+'</span><em><a href="tel:'+orr.tel.replace(/[^0-9+]/g,'')+'" style="color:var(--terra);text-decoration:none;border-bottom:1px solid var(--terra)">'+orr.tel+'</a></em></div>'+
      '<div class="rw"><span>'+t.cAd2+'</span><em style="font-size:12px;text-align:right;max-width:200px">'+orr.ad.split('|').join('<br>')+'</em></div>'+
-     '<div class="rw"><span>'+nm(orr.sku,true)+'</span><em>× '+orr.q+'</em></div>'+
+     ordItems(orr).map(function(i){return '<div class="rw"><span>'+nm(i.sku,true)+'</span><em>× '+i.q+'</em></div>';}).join('')+
      '<div class="rw" style="background:var(--greenbg)"><span style="font-weight:600">'+t.rcTot+'</span>'+
       '<em style="color:var(--green)">S$ '+N(cc.amt)+'</em></div></div>'+
     '<div class="go" style="grid-template-columns:1fr"><button type="button" class="k" data-sx>'+t.docClose+'</button></div>';
@@ -2089,8 +2153,14 @@ function sheetB(kind,no){
  if(kind==='dr'){
   tmpPhoto=null;
   sh.innerHTML='<div class="grab"></div><h3>'+t.drT+'</h3><p class="hint2">'+t.drH+'</p>'+
-   '<div class="sf"><label>'+t.drSold+'</label><input type="number" inputmode="numeric" id="dr-sold" value="4"></div>'+
-   '<div class="sf"><label>'+t.drDead+'</label><input type="number" inputmode="numeric" id="dr-dead" value="0"></div>'+
+   '<p style="font:600 12px/1 var(--sans);color:var(--odim);margin:2px 0 8px">'+t.drSold+'</p>'+
+   '<div class="g2" style="margin-bottom:12px">'+
+    '<div class="sf" style="margin:0"><label>'+t.drM+'</label><input type="number" inputmode="numeric" id="dr-sm" value="2"></div>'+
+    '<div class="sf" style="margin:0"><label>'+t.drF+'</label><input type="number" inputmode="numeric" id="dr-sf" value="2"></div></div>'+
+   '<p style="font:600 12px/1 var(--sans);color:var(--odim);margin:2px 0 8px">'+t.drDead+'</p>'+
+   '<div class="g2" style="margin-bottom:12px">'+
+    '<div class="sf" style="margin:0"><label>'+t.drM+'</label><input type="number" inputmode="numeric" id="dr-dm" value="0"></div>'+
+    '<div class="sf" style="margin:0"><label>'+t.drF+'</label><input type="number" inputmode="numeric" id="dr-df" value="0"></div></div>'+
    '<div class="sf"><label>'+t.dcPhoto.replace('📷 ','')+'</label>'+
     '<div class="photoin" id="dc-pw"><span>'+t.dcPhoto+'</span><input type="file" accept="image/*" id="dc-photo"></div></div>'+
    '<div class="go"><button type="button" class="c" data-sx>'+t.cancel+'</button>'+
@@ -2099,9 +2169,10 @@ function sheetB(kind,no){
  }
  if(kind==='po'){
   sh.innerHTML='<div class="grab"></div><h3>'+t.poNew+'</h3><p class="hint2">'+t.poNewH+'</p>'+
-   '<div class="sf"><label>'+t.poSku+'</label><select id="po-sku">'+
-    SKU.map(function(x){return '<option value="'+x.id+'">'+nm(x.id,true)+' · S$ '+N(b2bPrice(0,x.id))+'</option>';}).join('')+'</select></div>'+
-   '<div class="sf"><label>'+t.poQty+'</label><input type="number" inputmode="numeric" id="po-q" value="30"></div>'+
+   SKU.map(function(x){return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'+
+    '<div style="flex:1;min-width:0"><p style="font:500 14px/1.3 var(--sans)">'+nm(x.id,true)+'</p>'+
+    '<p style="font:400 11px var(--sans);color:var(--odim);margin-top:2px">S$ '+N(b2bPrice(0,x.id))+' · '+t.sOk+' '+avail(x)+'</p></div>'+
+    '<input type="number" inputmode="numeric" id="po-q-'+x.id+'" value="0" style="width:84px;height:46px;padding:0 12px;border:1px solid var(--oline);border-radius:10px;font:600 16px var(--sans);text-align:right"></div>';}).join('')+
    '<div class="sf"><label>'+(L==='zh'?'要求送货日期':'Requested delivery date')+'</label><input type="date" id="po-dd" value="2026-09-28"></div>'+
    '<div class="go"><button type="button" class="c" data-sx>'+t.cancel+'</button>'+
    '<button type="button" class="k" id="po-go">'+t.poGo+'</button></div>';
@@ -2146,9 +2217,14 @@ document.addEventListener('click',function(e){
  var el;
  if((el=e.target.closest('[data-nav]'))){go(el.getAttribute('data-nav'));return;}
  if((el=e.target.closest('[data-go]'))){go(el.getAttribute('data-go'));return;}
- if((el=e.target.closest('[data-cd]'))){var s=csku()[cpick];cqty=Math.max(0,Math.min(avail(s),cqty+ +el.getAttribute('data-cd')));if(!cqty)cpick=null;draw();return;}
- if((el=e.target.closest('[data-cs]'))){var i=+el.getAttribute('data-cs');if(cpick===i)return;cpick=i;cqty=1;draw();return;}
+ if((el=e.target.closest('[data-cadd]'))){var s2=sku(el.getAttribute('data-cadd'));
+   var q2=CART[s2.id]||0;
+   if(q2>=avail(s2)){toast((L==='zh'?'仅剩 ':'Only ')+avail(s2));return;}
+   CART[s2.id]=q2+1;draw();return;}
+ if((el=e.target.closest('[data-csub]'))){var id2=el.getAttribute('data-csub');
+   CART[id2]=Math.max(0,(CART[id2]||0)-1);draw();return;}
  if((el=e.target.closest('[data-day]'))){cday=+el.getAttribute('data-day');draw();return;}
+ if((el=e.target.closest('[data-slot]'))){cslot=+el.getAttribute('data-slot');draw();return;}
  if((el=e.target.closest('[data-pay]'))){confirmPay(el.getAttribute('data-pay'));return;}
  if((el=e.target.closest('[data-f5]'))){var n=el.getAttribute('data-f5');openS5=openS5===n?null:n;draw();return;}
  if((el=e.target.closest('[data-f4]'))){var n=el.getAttribute('data-f4');openS4=openS4===n?null:n;draw();return;}
@@ -2181,7 +2257,8 @@ document.addEventListener('click',function(e){
    sheet(null); draw(); return;}
  if(e.target.closest('#wo-go')){
    var id=$('wo-sku').value, q=+$('wo-q').value||0, s=sku(id);
-   if(q>0&&q<=avail(s)){s.stock-=q; toast(T().woDone(nm(id),q));}
+   if(q>avail(s)){toast((L==='zh'?'超过可售数量 · 仅 ':'Exceeds available · only ')+avail(s));return;}
+   if(q>0){s.stock-=q; toast(T().woDone(nm(id),q));}
    sheet(null); draw(); return;}
  if((el=e.target.closest('[data-day2]'))){var v=el.getAttribute('data-day2');openDay=openDay===v?null:v;draw();return;}
  if((el=e.target.closest('[data-per]'))){var i=+el.getAttribute('data-per');openPer=openPer===i?null:i;draw();return;}
@@ -2193,6 +2270,8 @@ document.addEventListener('click',function(e){
  if((el=e.target.closest('[data-pay2]'))){var i=+el.getAttribute('data-pay2');openPay=openPay===i?null:i;draw();return;}
  if((el=e.target.closest('[data-rec]'))){
    var i=+el.getAttribute('data-rec'), v=+$('rp-'+i).value||0;
+   var lf0=storeDue(i)-STORES[i].paid;
+   if(v>lf0+0.001){toast((L==='zh'?'超过未结金额 S$ ':'Exceeds outstanding S$ ')+N(lf0));return;}
    if(v>0){STORES[i].paid+=v; STORES[i].pays.push({amt:v,d:L==='zh'?'今天':'Today'});
      if(STORES[i].paid>=storeDue(i)) STORES[i].late=0;
      toast(T().o2done(N(v)));}
@@ -2202,10 +2281,18 @@ document.addEventListener('click',function(e){
    if(o&&navigator.clipboard) navigator.clipboard.writeText(o.who+'\n'+o.tel+'\n'+o.ad.split('|').join(' '));
    copied=true; draw(); return;}
  if(e.target.closest('#c-next')){go('c2');return;}
- if(e.target.closest('#c-submit')){submitOrder();return;}
+ if(e.target.closest('#c-submit')){
+  var okF=true;
+  ['I-nm','I-tel','I-ad'].forEach(function(fid){
+   var el2=$(fid), bad=!el2.value.trim();
+   el2.parentNode.className='fld'+(bad?' bad':'');
+   if(bad)okF=false;});
+  if(!okF){toast(T().needFill);return;}
+  go('c4');return;}
+ if(e.target.closest('#c4-go')){submitOrder();return;}
  if(e.target.closest('#c3go')){go('s1');return;}
- if(e.target.closest('#Xm')){csex='m';cpick=null;cqty=0;draw();return;}
- if(e.target.closest('#Xf')){csex='f';cpick=null;cqty=0;draw();return;}
+ if(e.target.closest('#Xm')){csex='m';draw();return;}
+ if(e.target.closest('#Xf')){csex='f';draw();return;}
  if(e.target.closest('#R-c')){go('c1');return;}
  if(e.target.closest('#R-s')){if(AUTH.s){go('s1');}else{lgRole='s';$('lg-u').value='sg01';$('lg-p').value='888888';go('lg');}return;}
  if(e.target.closest('#R-o')){if(AUTH.o){go('o1');}else{lgRole='o';$('lg-u').value='admin';$('lg-p').value='admin888';go('lg');}return;}
@@ -2221,12 +2308,16 @@ document.addEventListener('input',function(e){
        '<div><span>'+T().dPay+CARR[carr]+'</span><b>S$ '+payFee+'</b></div>'+
        '<div class="net '+(lost>0?'bad':'good')+'"><span>'+T().dNet+'</span><b>'+(lost>0?'− S$ '+lost:'+ S$ '+(-lost))+'</b></div>';}
    return;}
+ if(e.target.id==='s1-q'){s1q=e.target.value;var lc=$('s1-list');if(lc)lc.innerHTML=s1ListHtml(T());return;}
+ if(e.target.id==='I-tel'){e.target.value=e.target.value.replace(/[^0-9 ]/g,'');e.target.parentNode.className='fld';return;}
+ if(e.target.id==='I-nm'||e.target.id==='I-ad'){e.target.parentNode.className='fld';return;}
  if(e.target.id==='I-zn'){czone=+e.target.value;draw();}
 });
 
 document.addEventListener('click',function(e){
  var el;
  if((el=e.target.closest('[data-calit]'))){sheetB('cal',el.getAttribute('data-calit'));return;}
+ if((el=e.target.closest('[data-vieword]'))){sheetB('cal','r:'+el.getAttribute('data-vieword'));return;}
  if((el=e.target.closest('[data-calm]'))){
   calMonth=Math.max(9,Math.min(11,calMonth+ +el.getAttribute('data-calm')));calSel=null;draw();return;}
  if((el=e.target.closest('[data-cald]'))){calSel=el.getAttribute('data-cald');draw();return;}
@@ -2246,11 +2337,13 @@ document.addEventListener('click',function(e){
  if(e.target.closest('[data-nsx]')){NEWACC=null;draw();return;}
  if(e.target.closest('[data-dr]')){sheetB('dr');return;}
  if(e.target.closest('#dr-go')){
-  var sd=+$('dr-sold').value||0, dd2=+$('dr-dead').value||0;
+  var sm=+$('dr-sm').value||0, sf=+$('dr-sf').value||0;
+  var dm=+$('dr-dm').value||0, df=+$('dr-df').value||0;
+  var sd=sm+sf, dd2=dm+df;
   if(dd2>0&&!tmpPhoto){toast(T().dcNeed);return;}
   var prev=MYLEDGER[MYLEDGER.length-1].bal;
   var nb=Math.max(0,prev-sd-dd2);
-  MYLEDGER.push({d:'Day '+(MYLEDGER.length+1)+' · '+(L==='zh'?'今天':'Today'),in:0,dead:dd2,sold:sd,bal:nb});
+  MYLEDGER.push({d:'Day '+(MYLEDGER.length+1)+' · '+(L==='zh'?'今天':'Today'),in:0,dead:dd2,sold:sd,sm:sm,sf:sf,dm:dm,df:df,bal:nb});
   toast(T().drDone(nb)); sheet(null); draw(); return;}
  if(e.target.closest('[data-csopen]')){showInbox();return;}
  if(e.target.closest('[data-csmail]')){showMail();return;}
@@ -2265,11 +2358,13 @@ document.addEventListener('click',function(e){
  if(e.target.closest('[data-newpo]')){sheetB('po');return;}
  if((el=e.target.closest('[data-dc]'))){sheetB('dc',el.getAttribute('data-dc'));return;}
  if(e.target.closest('#po-go')){
-  var id2=$('po-sku').value,q2=+$('po-q').value||0;
-  if(q2>0){var no2='PO-2609-00'+(POSEQ++);
-   B2B.unshift({no:no2,shop:0,st:0,date:L==='zh'?'今天':'Today',dd:($('po-dd')&&$('po-dd').value)||'2026-09-28',photo:null,
-    items:[{sku:id2,q:q2,px:b2bPrice(0,id2),dead:0}]});
-   toast(T().poDone(no2));}
+  var items2=[],tq2=0;
+  SKU.forEach(function(s2){var el2=$('po-q-'+s2.id);var q2=el2?(+el2.value||0):0;
+   if(q2>0){items2.push({sku:s2.id,q:q2,px:b2bPrice(0,s2.id),dead:0});tq2+=q2;}});
+  if(!tq2){toast(L==='zh'?'请至少填一个数量':'Enter at least one quantity');return;}
+  var no2='PO-2609-00'+(POSEQ++);
+  B2B.unshift({no:no2,shop:0,st:0,date:L==='zh'?'今天':'Today',dd:($('po-dd')&&$('po-dd').value)||'2026-09-28',photo:null,items:items2});
+  toast(T().poDone(no2));
   sheet(null);draw();return;}
  if(e.target.closest('#dc-go')){
   if(!tmpPhoto){toast(T().dcNeed);return;}

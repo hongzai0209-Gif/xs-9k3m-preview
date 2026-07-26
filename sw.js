@@ -1,4 +1,4 @@
-const CACHE = 'yycrab-v4';
+const CACHE = 'yycrab-v5';
 const FILES = ['./', './index.html', './shop.html', './merchant.html', './admin.html'];
 
 self.addEventListener('install', function (e) {
