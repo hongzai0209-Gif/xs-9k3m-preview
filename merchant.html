@@ -100,6 +100,9 @@
   .fld textarea{min-height:66px;resize:none}
   .fld.bad input,.fld.bad textarea{border:1.5px solid #B0302A}
   .days{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  #c-days{display:flex;overflow-x:auto;gap:8px;padding-bottom:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #c-days::-webkit-scrollbar{display:none}
+  #c-days .day{flex:0 0 72px;border-radius:12px}
   .day{min-height:56px;border:.5px solid var(--line);background:var(--card);cursor:pointer;font:400 13px/1.4 var(--sans);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center}
   .day small{font-size:10px;color:var(--dim);margin-top:3px}
   .day.on{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -553,7 +556,17 @@
   }
   .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:80px;z-index:99;background:var(--ohd);color:#fff;padding:13px 20px;font:600 14px/1 var(--sans);opacity:0;pointer-events:none;transition:opacity .2s}
   .toast.on{opacity:1}
-</style>
+.lgwrap{min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:34px 22px;background:radial-gradient(130% 90% at 50% -5%,#F9F2E4 0%,#F1E7D2 48%,#EADDC3 100%)}
+  .lgcard{width:100%;max-width:340px;background:#FFFDF8;border:1px solid #E9DDC5;border-radius:22px;box-shadow:0 28px 64px -26px rgba(96,66,14,.28),0 2px 10px rgba(96,66,14,.06);padding:36px 26px 28px;text-align:center}
+  .lgseal{width:74px;height:74px;margin:0 auto;border-radius:50%;background:linear-gradient(148deg,#D2A554 8%,#9A6B24 92%);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px -9px rgba(154,107,36,.55),inset 0 1px 0 rgba(255,255,255,.35)}
+  .lgf{text-align:left;margin-top:15px}
+  .lgf label{display:block;font:700 10px/1 var(--sans);letter-spacing:1.6px;color:#9C8B66;text-transform:uppercase;margin:0 0 7px 2px}
+  .lgf input{width:100%;min-height:50px;padding:0 15px;border:1px solid #E4D7BC;border-radius:13px;background:#FCF8F0;font:500 16px var(--sans);color:#241C0F;transition:border-color .15s,box-shadow .15s}
+  .lgf input:focus{outline:none;border-color:#C89A4B;box-shadow:0 0 0 3px rgba(200,154,75,.16)}
+  .lgbtn{width:100%;min-height:52px;margin-top:22px;border:none;border-radius:13px;background:linear-gradient(148deg,#D2A554,#A9782C);color:#fff;font:700 16px var(--sans);letter-spacing:.4px;cursor:pointer;box-shadow:0 12px 24px -10px rgba(154,107,36,.6)}
+  .lgbtn:active{transform:translateY(1px)}
+  .lgfoot{font:700 9px/1 var(--sans);letter-spacing:3px;color:#B5A27E;margin-top:24px}
+  </style>
 </head>
 <body>
 
@@ -589,22 +602,23 @@
 
 <!-- LG 登入 -->
 <section class="view ops" id="v-lg">
- <div style="min-height:78vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 26px">
-  <svg viewBox="0 0 48 40" width="54" height="45" aria-hidden="true">
-   <g stroke="#9A6B24" stroke-width="1.9" stroke-linecap="round" fill="none">
-    <path d="M13 26 L6 31 M15 30 L11 36 M19 33 L17 39 M35 26 L42 31 M33 30 L37 36 M29 33 L31 39"/>
-    <path d="M14 18 L8 13 M8 13 L3 11 M8 13 L4 17 M34 18 L40 13 M40 13 L45 11 M40 13 L44 17"/></g>
-   <ellipse cx="24" cy="23" rx="11" ry="8.5" fill="#9A6B24"/>
-   <circle cx="20" cy="16" r="1.7" fill="#9A6B24"/><circle cx="28" cy="16" r="1.7" fill="#9A6B24"/>
-  </svg>
-  <p id="lg-t" style="font:700 22px/1.2 var(--sans);margin-top:18px"></p>
-  <p id="lg-s" style="font:400 11px/1 var(--sans);color:var(--odim);margin-top:9px;letter-spacing:2px"></p>
-  <div style="width:100%;max-width:320px;margin-top:30px">
-   <div class="fi"><label id="lg-lu"></label><input id="lg-u" value="sg01" autocomplete="off"></div>
-   <div class="fi"><label id="lg-lp"></label><input id="lg-p" type="password" value="888888"></div>
-   <button type="button" class="b1 full" style="min-height:52px;margin-top:6px" id="lg-go"></button>
-   <p id="lg-h" style="font:400 12px/1.7 var(--sans);color:var(--odim);text-align:center;margin-top:14px"></p>
+ <div class="lgwrap">
+  <div class="lgcard">
+   <div class="lgseal"><svg viewBox="0 0 48 40" width="38" height="32" aria-hidden="true">
+    <g stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none">
+     <path d="M13 26 L6 31 M15 30 L11 36 M19 33 L17 39 M35 26 L42 31 M33 30 L37 36 M29 33 L31 39"/>
+     <path d="M14 18 L8 13 M8 13 L3 11 M8 13 L4 17 M34 18 L40 13 M40 13 L45 11 M40 13 L44 17"/></g>
+    <ellipse cx="24" cy="23" rx="11" ry="8.5" fill="#fff"/>
+    <circle cx="20" cy="16" r="1.7" fill="#fff"/><circle cx="28" cy="16" r="1.7" fill="#fff"/>
+   </svg></div>
+   <p id="lg-t" style="font:700 21px/1.25 var(--sans);margin-top:18px;color:#241C0F"></p>
+   <p id="lg-s" style="font:600 10px/1.4 var(--sans);color:#A8935F;margin-top:8px;letter-spacing:2.5px"></p>
+   <div class="lgf"><label id="lg-lu"></label><input id="lg-u" value="sg01" autocomplete="off"></div>
+   <div class="lgf"><label id="lg-lp"></label><input id="lg-p" type="password" value="888888"></div>
+   <button type="button" class="lgbtn" id="lg-go"></button>
+   <p id="lg-h" style="font:400 12px/1.7 var(--sans);color:#A09173;margin-top:16px"></p>
   </div>
+  <p class="lgfoot">YANGCHENG LAKE HAIRY CRAB · SINGAPORE</p>
  </div>
 </section>
 
@@ -885,9 +899,12 @@ var LEDGERS={
 /* Cold Storage email 订单报告（截图真数据）*/
 var CS_IMPORTED=false;
 var MAILS=[
- {id:'m1',from:'orders@coldstorage.com.sg',subj:'Delivery Order Report · 14–16 Nov',time:'07:12',kind:'order'},
- {id:'m2',from:'promo@seafood-expo.sg',subj:'Seafood Expo 2026 — book your booth now',time:'06:40',kind:'other'},
- {id:'m3',from:'billing@sgtelco.sg',subj:'Your October invoice is ready',time:'Yesterday',kind:'other'}
+ {id:'m1',from:'orders@coldstorage.com.sg',nm:'Cold Storage Purchasing',subj:'Delivery Order Report · 14–16 Nov',time:'07:12',kind:'order',
+  body:'Dear Partner,<br><br>Please find attached the consolidated delivery order report for <b>14–16 Nov</b> — 9 orders in total (Premium Hairy Crab Set A &amp; Set B).<br><br>Kindly confirm stock availability and arrange delivery per the attached schedule. Reply to this email if any order cannot be fulfilled.<br><br>Best regards,<br>Purchasing Team<br>Cold Storage Singapore'},
+ {id:'m2',from:'promo@seafood-expo.sg',nm:'Seafood Expo 2026',subj:'Seafood Expo 2026 — book your booth now',time:'06:40',kind:'other',
+  body:'Booth bookings for <b>Seafood Expo 2026</b> (Marina Bay Sands, 12–14 Mar) are now open.<br><br>Early-bird rates end 30 Nov — secure a prime location and meet 8,000+ trade buyers from across Southeast Asia.<br><br>Seafood Expo Organising Committee'},
+ {id:'m3',from:'billing@sgtelco.sg',nm:'SG Telco Billing',subj:'Your October invoice is ready',time:'Yesterday',kind:'other',
+  body:'Your October invoice (<b>S$ 148.20</b>) is now ready.<br><br>Log in to your account portal to view the details and make payment by <b>15 Nov</b> to avoid service interruption.<br><br>SG Telco Billing Team — this is an automated message.'}
 ];
 var CSROWS=[
  {id:'CXD210034',dd:'14/11',who:'Wai Leng Ng',ad:'34A Lorong L Telok Kurau, Pine Court, 425443',tel:'9691 1928',set:'Premium Hairy Crab Set B',q:1},
@@ -1240,7 +1257,11 @@ var E={
 };
 
 /* ═══════════════ 状态 ═══════════════ */
-var L='en',view='c1',csex='m',cpick=null,cqty=0,cday=1,czone=0,cfilt=1,cslot=0,CART={},LASTORD=null,s1q='';
+var L='en',view='c1',csex='m',cpick=null,cqty=0,cday=0,czone=0,cfilt=1,cslot=0,CART={},LASTORD=null,s1q='';
+var DAYS=(function(){var a=[],we=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],wz=['周日','周一','周二','周三','周四','周五','周六'];
+ for(var i=0;i<14;i++){var dt=new Date(2026,8,14+i);a.push({d:dt.getDate(),we:we[dt.getDay()],wz:wz[dt.getDay()]});}return a;})();
+function dayTop(i){return L==='zh'?('9月'+DAYS[i].d):(DAYS[i].d+' Sep');}
+function daySub(i){if(i===0)return L==='zh'?'明天':'Tmr';return L==='zh'?DAYS[i].wz:DAYS[i].we;}
 var shipNo=null,payFee=14,carr=0,copied=false;
 var openS4=null,openS5=null,openStore=null,openPay=null,openIn=false,openWo=false;
 var openStk=null,stkF=0,repId=null,repP=0,openDay=null,openPer=0,sheetOn=null;
@@ -1277,7 +1298,7 @@ function submitOrder(){
  var o={no:no,st:0,shop:0,items:k.lines.map(function(i){return {sku:i.sku,q:i.q};}),zone:czone,
    who:$('I-nm').value||'—',tel:$('I-tel').value||'—',
    ad:($('I-ad').value||'—').replace(/,\s*/g,',|').replace(/\|$/,''),
-   day:[14,15,16][cday],slot:cslot,batch:'—',ts:Date.now()};
+   day:DAYS[cday].d,slot:cslot,batch:'—',ts:Date.now()};
  k.lines.forEach(function(i){sku(i.sku).hold+=i.q;});
  ORD.unshift(o); LASTORD=o; CART={};
  $('c3n').textContent=no;
@@ -1336,7 +1357,7 @@ function draw(){
  $('c2t').textContent=t.c2t;$('c2s').textContent=t.c2s;
  ['F1','F2','F3','F4','F5'].forEach(function(id,i){$(id).textContent=t.fld[i];});
  $('I-zn').innerHTML=ZONE.map(function(z,i){return '<option value="'+i+'"'+(czone===i?' selected':'')+'>'+z[L]+' — S$ '+z.fee+'</option>';}).join('');
- $('c-days').innerHTML=t.days.map(function(d,i){return '<button type="button" class="day'+(cday===i?' on':'')+'" data-day="'+i+'">'+d[0]+'<small>'+d[1]+'</small></button>';}).join('');
+ $('c-days').innerHTML=DAYS.map(function(d,i){return '<button type="button" class="day'+(cday===i?' on':'')+'" data-day="'+i+'">'+dayTop(i)+'<small>'+daySub(i)+'</small></button>';}).join('');
  $('F6').textContent=t.slotL;
  $('c-slots').innerHTML=t.slots.map(function(d,i){return '<button type="button" class="day'+(cslot===i?' on':'')+'" data-slot="'+i+'">'+d+'</button>';}).join('');
  $('c-submit').textContent=t.review;
@@ -1353,7 +1374,7 @@ function draw(){
    '<div class="r" style="color:var(--dim)"><span>'+t.rcFee+' · '+ZONE[czone][L]+'</span><span class="mono">'+(k4.fee?'S$ '+N(k4.fee):t.free)+'</span></div>'+
    '<div class="dv"></div><div class="r"><span>'+t.rcTot+'</span><b style="font-size:18px">S$ '+N(k4.amt)+'</b></div>'+
    '<div class="dv"></div><div class="ad"><span class="k">'+t.rcTo+'</span>'+($('I-nm').value||'')+' · <span class="mono">'+($('I-tel').value||'')+'</span><br>'+($('I-ad').value||'')+
-   '<span class="k">'+t.rcDay+'</span>'+t.days[cday][0]+' · '+t.slots[cslot]+'</div></div>';
+   '<span class="k">'+t.rcDay+'</span>'+dayTop(cday)+' · '+t.slots[cslot]+'</div></div>';
  }
 
  /* ── C3 ── */
@@ -2052,37 +2073,55 @@ function showInbox(){
   '<p style="font:600 10px/1 var(--sans);color:var(--odim);letter-spacing:2px">EMAIL · b2b@yangyangcrab.my</p>'+
   '<h2 style="font-size:17px;margin-top:9px">'+t.inboxT+'</h2>'+
   MAILS.map(function(mm){
-   if(mm.kind==='order'){
-    return '<div data-csmail style="cursor:pointer;border:1px solid var(--redln);background:var(--redbg);border-radius:12px;padding:13px 14px;margin-top:10px">'+
-     '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'+
-      '<span style="font:700 10px/1 var(--sans);color:#fff;background:var(--red);border-radius:6px;padding:4px 8px;letter-spacing:.5px">📦 '+(L==='zh'?'订单邮件':'ORDER')+'</span>'+
-      '<span style="font:400 11px var(--sans);color:var(--odim)">'+mm.time+'</span></div>'+
-     '<p style="font:600 14px/1.4 var(--sans);margin-top:9px">'+mm.subj+'</p>'+
-     '<p style="font:400 12px/1.5 var(--sans);color:var(--odim);margin-top:4px">'+mm.from+
-      (CS_IMPORTED?' · <b style="color:var(--green)">✓ '+(L==='zh'?'已导入':'imported')+'</b>':'')+'</p></div>';
-   }
-   return '<div style="border:1px solid var(--oline);border-radius:12px;padding:13px 14px;margin-top:10px;display:flex;justify-content:space-between;gap:10px;align-items:center">'+
-    '<div style="min-width:0"><p style="font:500 13px/1.4 var(--sans)">'+mm.subj+'</p>'+
-    '<p style="font:400 11px/1.5 var(--sans);color:var(--odim);margin-top:4px">'+mm.from+' · '+mm.time+'</p></div>'+
-    '<button type="button" data-maildel="'+mm.id+'" class="b3" style="min-height:36px;font-size:13px;padding:0 11px;flex-shrink:0">🗑</button></div>';
+   var isOrd=mm.kind==='order';
+   var av=isOrd?'📦':mm.nm.charAt(0);
+   var avbg=isOrd?'var(--red)':(mm.id==='m2'?'#7B8B5E':'#8B7B5E');
+   return '<div data-mailopen="'+mm.id+'" style="cursor:pointer;border:1px solid '+(isOrd?'var(--redln)':'var(--oline)')+';background:'+(isOrd?'var(--redbg)':'transparent')+';border-radius:14px;padding:12px 13px;margin-top:10px;display:flex;gap:11px;align-items:flex-start">'+
+    '<div style="width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font:700 15px var(--sans);color:#fff;background:'+avbg+'">'+av+'</div>'+
+    '<div style="flex:1;min-width:0">'+
+     '<div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline">'+
+      '<p style="font:600 13px/1.3 var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+mm.nm+'</p>'+
+      '<span style="font:400 11px var(--sans);color:var(--odim);flex-shrink:0">'+mm.time+'</span></div>'+
+     '<p style="font:'+(isOrd?'600':'500')+' 13px/1.4 var(--sans);margin-top:3px">'+
+      (isOrd?'<span style="font:700 9px/1 var(--sans);color:#fff;background:var(--red);border-radius:5px;padding:3px 6px;letter-spacing:.5px;margin-right:6px;vertical-align:1px">'+(L==='zh'?'订单':'ORDER')+'</span>':'')+mm.subj+'</p>'+
+     '<p style="font:400 11px/1.5 var(--sans);color:var(--odim);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+mm.body.replace(/<[^>]*>/g,' ').slice(0,64)+'…'+
+      (isOrd&&CS_IMPORTED?' · <b style="color:var(--green)">✓ '+(L==='zh'?'已导入':'imported')+'</b>':'')+'</p></div>'+
+    (isOrd?'':'<button type="button" data-maildel="'+mm.id+'" class="b3" style="min-height:34px;font-size:13px;padding:0 10px;flex-shrink:0">🗑</button>')+
+    '</div>';
   }).join('')+
   '<p class="note2">'+t.inboxNote+'</p>'+
   '<button type="button" class="x2" data-dx>'+t.docClose+'</button></div>';
  $('docwrap').className='docwrap on';
 }
-function showMail(){
- var t=T();
- $('docwrap').innerHTML='<div class="doc">'+
-  '<p style="font:600 10px/1 var(--sans);color:var(--odim);letter-spacing:2px">EMAIL · INBOX</p>'+
-  '<h2 style="font-size:17px;margin-top:9px">Delivery Order Report · 14–16 Nov</h2>'+
-  '<p class="co">From: orders@coldstorage.com.sg<br>To: b2b@yangyangcrab.my · today 07:12</p>'+
-  '<div style="display:inline-flex;align-items:center;gap:7px;margin:12px 0 6px;border:1px solid var(--oline);border-radius:10px;padding:9px 13px;font:600 12px var(--sans)">📎 DO_report.xlsx · '+CSROWS.length+' rows</div>'+
+function showMail(id){
+ var t=T(), mm=null; MAILS.forEach(function(x){if(x.id===id)mm=x;});
+ if(!mm) return;
+ var isOrd=mm.kind==='order';
+ var av=isOrd?'📦':mm.nm.charAt(0);
+ var avbg=isOrd?'var(--red)':(mm.id==='m2'?'#7B8B5E':'#8B7B5E');
+ var h='<div class="doc">'+
+  '<button type="button" data-csopen style="border:none;background:none;font:600 13px var(--sans);color:var(--odim);cursor:pointer;padding:0">‹ '+t.inboxT+'</button>'+
+  '<h2 style="font-size:17px;margin-top:11px">'+mm.subj+'</h2>'+
+  '<div style="display:flex;gap:11px;align-items:center;margin-top:13px;padding-bottom:13px;border-bottom:1px solid var(--oline)">'+
+   '<div style="width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font:700 16px var(--sans);color:#fff;background:'+avbg+'">'+av+'</div>'+
+   '<div style="min-width:0"><p style="font:600 13px/1.3 var(--sans)">'+mm.nm+' <span style="font-weight:400;color:var(--odim)">&lt;'+mm.from+'&gt;</span></p>'+
+   '<p style="font:400 11px/1.6 var(--sans);color:var(--odim)">'+(L==='zh'?'致':'To:')+' b2b@yangyangcrab.my · '+mm.time+'</p></div></div>'+
+  '<p style="font:400 13px/1.8 var(--sans);margin-top:14px">'+mm.body+'</p>';
+ if(isOrd){
+  h+='<div style="display:inline-flex;align-items:center;gap:7px;margin:14px 0 6px;border:1px solid var(--oline);border-radius:10px;padding:9px 13px;font:600 12px var(--sans)">📎 DO_report.xlsx · '+CSROWS.length+' rows</div>'+
   '<table><tr><th>#</th><th>Order ID</th><th>Customer</th><th class="r">Qty</th></tr>'+
   CSROWS.map(function(r,i){return '<tr><td>'+(i+1)+'</td><td style="font-variant-numeric:tabular-nums">'+r.id+'</td><td>'+r.who+'</td><td class="r">'+r.q+'</td></tr>';}).join('')+
   '</table><p class="note2">'+t.csVia+'</p>'+
   '<div style="display:grid;grid-template-columns:96px 1fr;gap:10px;margin-top:16px">'+
    '<button type="button" class="x2" style="margin-top:0;background:0;border:1px solid var(--oline);color:var(--oink)" data-dx>'+t.docClose+'</button>'+
-   '<button type="button" class="x2" style="margin-top:0" data-csimp>'+t.csBtn+'</button></div></div>';
+   '<button type="button" class="x2" style="margin-top:0" data-csimp>'+t.csBtn+'</button></div>';
+ }else{
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px">'+
+   '<button type="button" class="x2" style="margin-top:0;background:0;border:1px solid var(--oline);color:var(--oink)" data-dx>'+t.docClose+'</button>'+
+   '<button type="button" class="x2" style="margin-top:0;background:var(--redbg);color:var(--red);border:1px solid var(--redln)" data-maildel="'+mm.id+'">🗑 '+(L==='zh'?'删除':'Delete')+'</button></div>';
+ }
+ h+='</div>';
+ $('docwrap').innerHTML=h;
  $('docwrap').className='docwrap on';
 }
 var tmpPhoto=null,dcNo=null;
@@ -2346,11 +2385,11 @@ document.addEventListener('click',function(e){
   MYLEDGER.push({d:'Day '+(MYLEDGER.length+1)+' · '+(L==='zh'?'今天':'Today'),in:0,dead:dd2,sold:sd,sm:sm,sf:sf,dm:dm,df:df,bal:nb});
   toast(T().drDone(nb)); sheet(null); draw(); return;}
  if(e.target.closest('[data-csopen]')){showInbox();return;}
- if(e.target.closest('[data-csmail]')){showMail();return;}
  if((el=e.target.closest('[data-maildel]'))){
   var mid=el.getAttribute('data-maildel');
   MAILS=MAILS.filter(function(x){return x.id!==mid;});
   toast(T().mailDel); showInbox(); return;}
+ if((el=e.target.closest('[data-mailopen]'))){showMail(el.getAttribute('data-mailopen'));return;}
  if(e.target.closest('[data-csimp]')){
   if(CS_IMPORTED){toast(T().csDup(CSROWS.length));}
   else{CS_IMPORTED=true;toast(T().csDone(CSROWS.length));}
