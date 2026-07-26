@@ -1,9 +1,10 @@
-const CACHE = 'xieshe-v1';
+const CACHE = 'yycrab-v4';
+const FILES = ['./', './index.html', './shop.html', './merchant.html', './admin.html'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(
     caches.open(CACHE)
-      .then(function (c) { return c.addAll(['./', './index.html']); })
+      .then(function (c) { return c.addAll(FILES); })
       .then(function () { return self.skipWaiting(); })
   );
 });
