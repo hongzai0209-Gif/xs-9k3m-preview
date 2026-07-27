@@ -822,11 +822,11 @@ var PR0={
 function clone(o){return JSON.parse(JSON.stringify(o));}
 var STORES=[
  {id:0,zh:'Bugis 店',en:'Bugis',code:'sg01',staff:'Ah Fong',tel:'9123 8801',
-  ad:'Blk 531 Upper Cross St, #01-12, S050531',price:clone(PR0),paid:3301.20,pays:[{amt:3301.20,d:'8/9'}]},
+  ad:'Blk 531 Upper Cross St, #01-12, S050531',skus:['f3','f35','m35','m4'],price:clone(PR0),paid:3301.20,pays:[{amt:3301.20,d:'8/9'}]},
  {id:1,zh:'Chinatown 店',en:'Chinatown',code:'sg02',staff:'Lim Boon',tel:'8862 3402',
-  ad:'5 Banda Street, #01-08, S050005',price:clone(PR0),paid:1600,pays:[{amt:1600,d:'10/9'}]},
+  ad:'5 Banda Street, #01-08, S050005',skus:['f3','f35','m35','m4'],price:clone(PR0),paid:1600,pays:[{amt:1600,d:'10/9'}]},
  {id:2,zh:'Tampines 店',en:'Tampines',code:'sg03',staff:'Tan Kim',tel:'9330 9922',
-  ad:'Blk 201 Tampines St 21, #01-1043, S520201',price:clone(PR0),paid:0,pays:[],late:19}
+  ad:'Blk 201 Tampines St 21, #01-1043, S520201',skus:['f3','f35','m35','m4'],price:clone(PR0),paid:0,pays:[],late:19}
 ];
 var BATCH=[
  {no:'B20260908-01',sku:'m35',age:2,qty:180},
@@ -867,10 +867,11 @@ var SH=[
 ];
 /* 本期已卖出的历史（不含演示新单）：结算收入 11,580 / 已售 386 只 */
 var HIST={sold:386, settle:6713.40, cost:4678, dead:186, feeIn:830, feeOut:1140, lastGp:1374};
+var DEADX=HIST.dead;
 
 /* B2B 进货价（预设）· 批发商确认排货时可按店/按单调整 */
 var B2BPX={f3:15.90,m35:15.90,f35:19.90,m4:19.90};
-var POSEQ=5;
+var POSEQ=5, NSK=1;
 var B2B=[
  {no:'PO-2609-001',shop:0,st:2,date:'22/9',dd:'2026-09-24',photo:'seed',
   items:[{sku:'m35',q:20,px:15.90,dead:3},{sku:'f3',q:30,px:15.90,dead:0}]},
@@ -1003,7 +1004,13 @@ var Z={
  stAct:['等待门店收款','安排配送','标记已送达','查看详情'],
  oTo:function(d,z){return '送达 9月'+d+'日 · '+z;},feeK:'运费 · 已收 / 成本',o3e:'暂无此类订单',
  o4t:'库存',o4s:function(n,v){return n+' 只 · 存货成本 S$ '+v;},
- o4in:'+ 进货入库',o4wo:'− 存货报损',
+ o4in:'+ 进货入库',o4wo:'− 存货报损',o4new:'✦ 新品种上架',
+ nkT:'新品种上架',nkH:'录入后即进仓库。门店收到这个货后，它才会自动出现在那家店的扫码页和价目表。',
+ nkSex:'公 / 母',nkName:'规格名（如 4.5两）',nkG:'重量范围 g（如 215–240）',
+ nkCost:'进货成本 S$/只',nkB2b:'门店供货价 S$/只',nkSell:'建议零售价 S$/只',
+ nkQty:'初始入库数量',nkGo:'上架',
+ nkDone:function(n){return n+' 已入仓，发货给门店后自动上架';},
+ s4qrT:'本店专属二维码',rk9:'店铺详情 · QR ›',
  sOk:'可售',sHold:'已预留',sCost:'单只成本',sBatch:'批次 · 先进先出',dOld:'天',
  inHint:'新进的货，进库日期与成本会记入批次。',
  woHint:'报损单独记账，不会算进销售，毛利才准。',
@@ -1151,7 +1158,13 @@ var E={
  stF:['To Pay','To Ship','Delivering','Delivered'],
  oTo:function(d,z){return 'Deliver '+d+' Sep · '+z;},feeK:'Delivery · collected / cost',o3e:'No orders here',
  o4t:'Stock',o4s:function(n,v){return n+' pcs · S$ '+v+' tied up';},
- o4in:'+ Stock in',o4wo:'− Write off (dead)',
+ o4in:'+ Stock in',o4wo:'− Write off (dead)',o4new:'✦ New product',
+ nkT:'New product',nkH:'Goes into the warehouse now. It only appears on a store\'s ordering page and price list after goods are delivered to that store.',
+ nkSex:'Male / Female',nkName:'Size name (e.g. 4.5两)',nkG:'Weight range g (e.g. 215–240)',
+ nkCost:'Unit cost S$',nkB2b:'Store supply price S$',nkSell:'Retail price S$',
+ nkQty:'Initial stock qty',nkGo:'Add product',
+ nkDone:function(n){return n+' added to warehouse — deliver to a store to list it there';},
+ s4qrT:'Your store QR',rk9:'Store detail · QR ›',
  sOk:'Available',sHold:'Reserved',sCost:'Cost/pc',sBatch:'Batches · FIFO',dOld:'d',
  inHint:'New stock is recorded as a batch with its date and cost.',
  woHint:'Write-offs are booked separately, never as sales — so gross profit stays honest.',
@@ -1283,7 +1296,7 @@ function nav(id,items,idx,map){
 }
 
 /* ═══════════════ 客人 ═══════════════ */
-function csku(){return SKU.filter(function(s){return s.k===csex;});}
+function csku(){var ls=storeSkus(0);return SKU.filter(function(s){return s.k===csex&&ls.indexOf(s.id)>=0;});}
 function cartLines(){var r=[];SKU.forEach(function(s2){var q=CART[s2.id]||0;if(q>0)r.push({sku:s2.id,q:q});});return r;}
 function cartQty(){var q=0;cartLines().forEach(function(i){q+=i.q;});return q;}
 function ctot(){
@@ -1417,7 +1430,7 @@ function draw(){
 
  /* ── S4 价目表 ── */
  $('s4t').textContent=t.s4t;$('s4s').textContent=t.s4s;
- $('s4-body').innerHTML=SKU.map(function(s){
+ $('s4-body').innerHTML=SKU.filter(function(s){return storeSkus(0).indexOf(s.id)>=0;}).map(function(s){
   var p=px(0,s.id), op=openS4===s.id, e=p.sell-p.settle;
   return '<div class="fold'+(op?' open':'')+'"><div class="fhd" data-f4="'+s.id+'">'+
    '<div><p class="a">'+nm(s.id,true)+'</p><p class="b">'+s.g+' g · '+t.pSettle+' S$ '+N(p.settle)+'</p></div>'+
@@ -1432,6 +1445,11 @@ function draw(){
     '<button type="button" class="b1 full" data-save="'+s.id+'">'+t.pSave+'</button>'+
    '</div></div>';
  }).join('');
+
+ $('s4-body').innerHTML+='<div style="border:1px solid var(--line);border-radius:14px;background:var(--card);padding:16px;margin-top:16px">'+
+  '<p style="font:600 13px/1 var(--sans);margin-bottom:12px">'+t.s4qrT+'</p>'+
+  '<div style="display:flex;gap:13px;align-items:center"><div class="qrb">'+QR('sg01')+'</div>'+
+  '<p style="font:400 12px/1.75 var(--sans);color:var(--dim)">'+t.qrPerm+'</p></div></div>';
 
  /* ── S5 结算 ── */
  var td=ORD.filter(function(o){return o.shop===0&&o.st>=1;});
@@ -1482,7 +1500,7 @@ function draw(){
    if(o.paid != null) feeOut += o.paid;   /* 实付给 Lalamove/Grab —— 发货时输入的那个数字 */
  });
  var feeNet=feeOut-feeIn;
- var gp=settle-cost-HIST.dead-feeNet;
+ var gp=settle-cost-DEADX-feeNet;
  var pct=Math.round((gp/HIST.lastGp-1)*100);
  var totStock=0,totVal=0;
  SKU.forEach(function(s){totStock+=avail(s);totVal+=avail(s)*s.cost;});
@@ -1491,7 +1509,7 @@ function draw(){
  var mx=settle;
  $('o1t').textContent=t.o1t;$('o1s').textContent=t.o1s;
  var pls=[[t.pl[0],settle,100,'in'],[t.pl[1],cost,Math.round(cost/mx*100),'out'],
-          [t.pl[2],HIST.dead,Math.round(HIST.dead/mx*100),'out'],[t.pl[3],feeNet,Math.round(feeNet/mx*100),'lk']];
+          [t.pl[2],DEADX,Math.round(DEADX/mx*100),'out'],[t.pl[3],feeNet,Math.round(feeNet/mx*100),'lk']];
  var q0=0,q1=0;B2B.forEach(function(o){if(o.st===0)q0++;else if(o.st===1)q1++;});
  var csn=CS_IMPORTED?0:CSROWS.length;
  var b2c=0;ORD.forEach(function(o){if(o.st===1)b2c++;});
@@ -1559,7 +1577,8 @@ function draw(){
  if(stkF===2) vis=vis.filter(function(s){return oldest(s.id)>=5;});
  var oh='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'+
   '<button type="button" class="b1" data-o="in">'+t.o4in+'</button>'+
-  '<button type="button" class="b2" data-o="wo">'+t.o4wo+'</button></div>'+
+  '<button type="button" class="b2" data-o="wo">'+t.o4wo+'</button>'+
+  '<button type="button" class="b2" data-o="nsku" style="grid-column:1/-1;color:var(--terra);border-color:var(--terra)">'+t.o4new+'</button></div>'+
   '<div class="filt" style="padding:0 0 12px;background:0;border:0">'+
   [t.stkAll,t.stkLow,t.stkOld].map(function(x,i){
    return '<button type="button" data-sf="'+i+'" class="'+(stkF===i?'on':'')+'">'+x+'</button>';}).join('')+'</div>'+
@@ -1609,7 +1628,7 @@ function draw(){
    '<div class="bar"><i style="width:'+sh+'%"></i><b>'+sh+'%</b></div>'+
    '<div class="foot">'+
     '<span style="font:400 12px var(--sans);color:var(--odim)">'+t.rMar+' <b style="font:700 14px var(--sans);color:var(--green);font-variant-numeric:tabular-nums">S$ '+N(mar)+'</b></span>'+
-    '<span style="font:600 13px var(--sans);color:var(--terra)">'+t.rkGo+'</span></div>'+
+    '<button type="button" data-go9="'+st.id+'" style="font:600 13px var(--sans);color:var(--terra);background:none;border:none;cursor:pointer;padding:0">'+t.rk9+'</button></div>'+
   '</div>';
  }).join('');
 
@@ -1755,12 +1774,27 @@ function poNet(o){var t2=0;o.items.forEach(function(i){t2+=(i.q-i.dead)*i.px;});
 function poQty(o){var q=0,d=0;o.items.forEach(function(i){q+=i.q;d+=i.dead;});return {q:q,d:d};}
 function b2bPrice(shop,id){var st=STORES[shop];return (st.b2bAdj&&st.b2bAdj[id])||B2BPX[id];}
 function findPO(no){var o=null;B2B.forEach(function(x){if(x.no===no)o=x;});return o;}
+function storeSkus(id){var st=STORES[id];if(!st)return[];if(!st.skus)st.skus=SKU.map(function(x){return x.id;});return st.skus;}
 function oldest(id){var m=0;BATCH.forEach(function(b){if(b.sku===id&&b.age>m)m=b.age;});return m;}
 function sheet(kind){
  var t=T(), m=$('mask'), sh=$('sheet');
  if(!kind){ m.className='mask'; sh.className='sheet'; sheetOn=null; return; }
  sheetOn=kind;
- if(kind==='in'){
+ if(kind==='nsku'){
+  sh.innerHTML='<div class="grab"></div><h3>'+t.nkT+'</h3><p class="hint2">'+t.nkH+'</p>'+
+   '<div class="sf"><label>'+t.nkSex+'</label><select id="nk-sex"><option value="f">'+t.drF+'</option><option value="m">'+t.drM+'</option></select></div>'+
+   '<div class="g2">'+
+    '<div class="sf" style="margin:0"><label>'+t.nkName+'</label><input id="nk-name" placeholder="4.5两" autocomplete="off"></div>'+
+    '<div class="sf" style="margin:0"><label>'+t.nkG+'</label><input id="nk-g" placeholder="215–240" autocomplete="off"></div></div>'+
+   '<div class="g2" style="margin-top:12px">'+
+    '<div class="sf" style="margin:0"><label>'+t.nkCost+'</label><input type="number" inputmode="decimal" id="nk-cost" value="18"></div>'+
+    '<div class="sf" style="margin:0"><label>'+t.nkB2b+'</label><input type="number" inputmode="decimal" id="nk-b2b" value="25.90"></div></div>'+
+   '<div class="g2" style="margin-top:12px">'+
+    '<div class="sf" style="margin:0"><label>'+t.nkSell+'</label><input type="number" inputmode="decimal" id="nk-sell" value="29.90"></div>'+
+    '<div class="sf" style="margin:0"><label>'+t.nkQty+'</label><input type="number" inputmode="numeric" id="nk-q" value="50"></div></div>'+
+   '<div class="go"><button type="button" class="c" data-sx>'+t.cancel+'</button>'+
+    '<button type="button" class="k" id="nk-go">'+t.nkGo+'</button></div>';
+ } else if(kind==='in'){
   sh.innerHTML='<div class="grab"></div><h3>'+t.inT+'</h3>'+
    '<p class="hint2">'+t.inHint+'</p>'+
    '<div class="sf"><label>'+t.inSku+'</label><select id="in-sku">'+
@@ -2287,6 +2321,19 @@ document.addEventListener('click',function(e){
  if((el=e.target.closest('[data-cr]'))){carr=+el.getAttribute('data-cr');draw();return;}
  if((el=e.target.closest('[data-o]'))){sheet(el.getAttribute('data-o'));return;}
  if(e.target.closest('[data-sx]')||e.target.id==='mask'){sheet(null);return;}
+ if(e.target.closest('#nk-go')){
+  var kx=$('nk-sex').value, nmx=($('nk-name').value||'').trim(), gx=($('nk-g').value||'').trim();
+  var cx=+$('nk-cost').value||0, bx=+$('nk-b2b').value||0, sx2=+$('nk-sell').value||0, qx=+$('nk-q').value||0;
+  if(!nmx||!bx||!sx2){toast(L==='zh'?'请填规格名、供货价、零售价':'Fill in size name, supply & retail price');return;}
+  if(sx2<=bx){toast(L==='zh'?'零售价需高于供货价':'Retail must be above supply price');return;}
+  var nid2='n'+(NSK++);
+  SKU.push({id:nid2,k:kx,sz:nmx,g:gx||'—',cost:cx,stock:qx,hold:0});
+  PR0[nid2]={sell:sx2,settle:bx,floor:Math.max(0,sx2-1),cap:sx2+3};
+  B2BPX[nid2]=bx;
+  STORES.forEach(function(st2){st2.price[nid2]={sell:sx2,settle:bx,floor:Math.max(0,sx2-1),cap:sx2+3};});
+  if(qx>0)BATCH.push({no:'B-NEW-'+nid2.toUpperCase(),sku:nid2,age:0,qty:qx});
+  toast(T().nkDone(nm(nid2,true)));
+  sheet(null);draw();return;}
  if(e.target.closest('#in-go')){
    var id=$('in-sku').value, q=+$('in-q').value||0, c=+$('in-c').value||0;
    if(q>0){var s=sku(id); s.stock+=q; s.cost=c;
@@ -2297,11 +2344,12 @@ document.addEventListener('click',function(e){
  if(e.target.closest('#wo-go')){
    var id=$('wo-sku').value, q=+$('wo-q').value||0, s=sku(id);
    if(q>avail(s)){toast((L==='zh'?'超过可售数量 · 仅 ':'Exceeds available · only ')+avail(s));return;}
-   if(q>0){s.stock-=q; toast(T().woDone(nm(id),q));}
+   if(q>0){s.stock-=q; DEADX+=q*s.cost; toast(T().woDone(nm(id),q));}
    sheet(null); draw(); return;}
  if((el=e.target.closest('[data-day2]'))){var v=el.getAttribute('data-day2');openDay=openDay===v?null:v;draw();return;}
  if((el=e.target.closest('[data-per]'))){var i=+el.getAttribute('data-per');openPer=openPer===i?null:i;draw();return;}
  if((el=e.target.closest('[data-wipe]'))){var i=+el.getAttribute('data-wipe');openPay=openPay===i?null:i;draw();return;}
+ if((el=e.target.closest('[data-go9]'))){b2bStore=+el.getAttribute('data-go9');go('o9');return;}
  if((el=e.target.closest('[data-rep]'))){repId=+el.getAttribute('data-rep');repP=0;go('o7');return;}
  if((el=e.target.closest('[data-pp]'))){repP=+el.getAttribute('data-pp');draw();return;}
  if((el=e.target.closest('[data-stk]'))){var v=el.getAttribute('data-stk');openStk=openStk===v?null:v;draw();return;}
@@ -2369,7 +2417,7 @@ document.addEventListener('click',function(e){
  if(e.target.closest('#ns-go')){
   var nv=$('ns-name').value||'新店';
   var nid=STORES.length;
-  STORES.push({id:nid,zh:nv,en:nv.replace(/\s*店$/,''),code:nsUser,staff:($('ns-staff')?$('ns-staff').value:'—'),tel:($('ns-tel')?$('ns-tel').value:''),ad:($('ns-ad')?$('ns-ad').value:''),price:clone(PR0),paid:0,pays:[]});
+  STORES.push({id:nid,zh:nv,en:nv.replace(/\s*店$/,''),code:nsUser,staff:($('ns-staff')?$('ns-staff').value:'—'),tel:($('ns-tel')?$('ns-tel').value:''),ad:($('ns-ad')?$('ns-ad').value:''),price:clone(PR0),skus:[],paid:0,pays:[]});
   SH.push({id:nid,per:[{o:0,q:0,rev:0,due:0},{o:0,q:0,rev:0,due:0},{o:0,q:0,rev:0,due:0}],mix:{}});
   NEWACC={name:nv,user:nsUser,pass:nsPass};
   toast(T().nsDone); sheet(null); draw(); return;}
@@ -2435,6 +2483,8 @@ document.addEventListener('click',function(e){
   var no4=el.getAttribute('data-ship2'),o4=findPO(no4);
   if(o4){o4.items.forEach(function(i){var sk4=sku(i.sku);
     sk4.hold=Math.max(0,sk4.hold-i.q); sk4.stock=Math.max(0,sk4.stock-i.q);});
+   var ss2=STORES[o4.shop];
+   if(ss2){if(!ss2.skus)ss2.skus=[];o4.items.forEach(function(i){if(ss2.skus.indexOf(i.sku)<0)ss2.skus.push(i.sku);});}
    o4.st=2;toast(T().o8shipDone(no4));draw();}
   return;}
  if((el=e.target.closest('[data-do]'))){showDoc('do',el.getAttribute('data-do'));return;}
